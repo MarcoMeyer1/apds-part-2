@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Register.css'; // Reuse the same CSS file for styling
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -24,10 +25,10 @@ const Login = () => {
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
+        <div className="register-container">  {/* Reusing the same container class */}
+            <form className="register-form" onSubmit={handleSubmit}>
+                <h2>Login</h2>
+                <div className="form-group">
                     <label>Username</label>
                     <input 
                         type="text" 
@@ -36,7 +37,7 @@ const Login = () => {
                         required 
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <label>Password</label>
                     <input 
                         type="password" 
