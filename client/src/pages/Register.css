@@ -1,9 +1,10 @@
+
 .register-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #f0f2f5;
+  background: #e6f2ff;
 }
 
 .register-form {
@@ -64,5 +65,5 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #45a049;
 }
