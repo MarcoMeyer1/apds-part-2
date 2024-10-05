@@ -110,25 +110,24 @@ app.post('/payment', async (req, res) => {
 });
 
 
-app.get('/admin/transactions', async (req, res) => {
+
+app.get('/transactions', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userID = decoded.id; // Extract user ID from the decoded token
 
-    // Only allow Admins or Employees to access this route
-    if (decoded.role !== 'Admin' && decoded.role !== 'Employee') {
-        return res.status(403).send('Access Denied');
-    }
-
-    const query = `SELECT * FROM Payments WHERE Verified = 0 ORDER BY CreatedAt DESC`;
+    const query = `SELECT * FROM Payments WHERE UserID = @userID ORDER BY CreatedAt DESC`;
 
     try {
         const request = new sql.Request();
+        request.input('userID', sql.Int, userID);  // Query only transactions for the logged-in user
         const result = await request.query(query);
-        res.status(200).json(result.recordset);
+        res.status(200).json(result.recordset);  // Return the transactions
     } catch (err) {
         res.status(500).send('Failed to fetch transactions');
     }
 });
+
 
 
 app.get('/transactions', async (req, res) => {
