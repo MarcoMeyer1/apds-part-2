@@ -14,11 +14,18 @@ const Login = () => {
             },
             body: JSON.stringify({ username, password }),
         });
-
+    
         const data = await response.json();
         if (data.token) {
             localStorage.setItem('token', data.token);
+            localStorage.setItem('role', data.role);  // Store the user role
             alert('Login Successful');
+    
+            if (data.role === 'Admin' || data.role === 'Employee') {
+                window.location.href = '/admin-dashboard';
+            } else {
+                window.location.href = '/';
+            }
         } else {
             alert('Login Failed');
         }
