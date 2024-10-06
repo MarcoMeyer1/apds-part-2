@@ -7,25 +7,27 @@ jobs:
     steps:
       - checkout  # Checkout your code from the repo
 
-      # Navigate to the correct directory where package.json is located (e.g., client or api)
+      # Navigate to the client directory where package.json is located
       - run:
-          name: Navigate to Client/Api Directory
-          command: cd client  # Replace 'client' with 'api' if package.json is in the api directory
+          name: Navigate to Client Directory
+          command: cd client
 
       # Cache node_modules to speed up subsequent builds
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "client/package.json" }}
             - v1-dependencies-
-            
+
+      # Install dependencies from client/package.json
       - run:
           name: Install Dependencies
           command: npm install
 
+      # Save node_modules cache
       - save_cache:
           paths:
-            - ./node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - client/node_modules
+          key: v1-dependencies-{{ checksum "client/package.json" }}
 
       # Run tests
       - run:
