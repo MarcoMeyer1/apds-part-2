@@ -1,4 +1,3 @@
-// src/pages/Payment.js
 import React, { useState } from 'react';
 import './Payment.css';
 
@@ -7,22 +6,34 @@ const Payment = () => {
     const [currency, setCurrency] = useState('');
     const [provider, setProvider] = useState('');
     const [swiftCode, setSwiftCode] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
+    // Ensure handleSubmit is defined correctly
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch('http://localhost:5000/payment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({ amount, currency, provider, swiftCode }),
-        });
+        setErrorMessage(''); // Clear any previous error messages
 
-        if (response.ok) {
-            alert('Payment Processed Successfully');
-        } else {
-            alert('Payment Failed');
+        console.log('Submitting payment:', { amount, currency, provider, swiftCode });
+
+        try {
+            const response = await fetch('http://localhost:5000/payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include', // Ensure cookies are included in the request
+                body: JSON.stringify({ amount, currency, provider, swiftCode }),
+            });
+
+            if (response.ok) {
+                alert('Payment Processed Successfully');
+            } else {
+                const errorData = await response.text();
+                setErrorMessage(errorData || 'Payment Failed');
+            }
+        } catch (error) {
+            console.error('Error during payment processing:', error);
+            setErrorMessage('Payment failed due to an error. Please try again later.');
         }
     };
 
@@ -30,6 +41,10 @@ const Payment = () => {
         <div className="payment-container">
             <form className="payment-form" onSubmit={handleSubmit}>
                 <h2>Make a Payment</h2>
+
+                {/* Display error message if any */}
+                {errorMessage && <div className="error-message">{errorMessage}</div>}
+
                 <div className="form-group">
                     <label>Amount</label>
                     <input 

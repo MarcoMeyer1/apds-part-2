@@ -7,15 +7,13 @@ const TransactionSummary = () => {
 
     useEffect(() => {
         const fetchTransactions = async () => {
-            const token = localStorage.getItem('token');
-
             try {
                 const response = await fetch('http://localhost:5000/transactions', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
                     },
+                    credentials: 'include', // Include cookies in the request
                 });
 
                 const data = await response.json();
