@@ -1,0 +1,50 @@
+version: 2.1
+
+jobs:
+  build-and-test:
+    docker:
+      - image: circleci/node:14  # Use Node.js Docker image for your environment
+    steps:
+      - checkout  # Checkout your code from the repo
+
+      # Navigate to the client directory where package.json is located
+      - run:
+          name: Navigate to Client Directory
+          command: cd client
+
+      # Cache node_modules to speed up subsequent builds
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "client/package.json" }}
+            - v1-dependencies-
+
+      # Install dependencies from client/package.json
+      - run:
+          name: Install Dependencies
+          command: npm install
+
+      # Save node_modules cache
+      - save_cache:
+          paths:
+            - client/node_modules
+          key: v1-dependencies-{{ checksum "client/package.json" }}
+
+      # Run tests
+      - run:
+          name: Run Tests
+          command: npm test
+
+      # Lint the code
+      - run:
+          name: Run Lint
+          command: npm run lint
+
+      # Run security audit
+      - run:
+          name: Run NPM Audit
+          command: npm audit
+
+workflows:
+  build-and-test-workflow:
+    jobs:
+      - build-and-test
