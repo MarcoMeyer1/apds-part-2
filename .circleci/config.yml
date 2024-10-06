@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build-and-test:
     docker:
-      - image: circleci/node:18.17  # Updated valid Docker image
+      - image: circleci/node:14  # Using Node.js Docker image for your environment
 
     steps:
       - checkout  # Checkout your code from the repo
@@ -34,7 +34,7 @@ jobs:
             cd client
             npm install sonarqube-scanner
 
-      # Run SonarQube Scan using SonarCloud with token only
+      # Run SonarQube Scan using SonarCloud with hardcoded values (deprecating sonar.login)
       - run:
           name: Run SonarCloud Scan
           command: |
@@ -44,10 +44,9 @@ jobs:
               -Dsonar.organization=marcomeyer1 \
               -Dsonar.sources=. \
               -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.token=7f7c83654f1053d075406d09d3b2eae89326822d
+              -Dsonar.login=7f7c83654f1053d075406d09d3b2eae89326822d
 
 workflows:
   build-and-test-workflow:
     jobs:
       - build-and-test
-
