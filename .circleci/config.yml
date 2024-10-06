@@ -8,7 +8,7 @@ jobs:
     steps:
       - checkout  # Checkout your code from the repo
 
-      # Cache node_modules to speed up subsequent builds
+      # Cache node_modules to speed up subsequent buildz
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "client/package.json" }}
