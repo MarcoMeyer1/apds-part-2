@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build-and-test:
     docker:
-      - image: circleci/node:18-browsers  # Updated valid Docker image
+      - image: circleci/node:18.17  # Updated valid Docker image
 
     steps:
       - checkout  # Checkout your code from the repo
@@ -50,3 +50,4 @@ workflows:
   build-and-test-workflow:
     jobs:
       - build-and-test
+
