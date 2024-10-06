@@ -1,0 +1,6 @@
+projectKey=APDS-Part-2-Website
+serverUrl=http://localhost:9000
+serverVersion=10.7.0.96327
+dashboardUrl=http://localhost:9000/dashboard?id=APDS-Part-2-Website
+ceTaskId=5796fcc3-766a-4c4c-8fe2-0206b38f71c8
+ceTaskUrl=http://localhost:9000/api/ce/task?id=5796fcc3-766a-4c4c-8fe2-0206b38f71c8
