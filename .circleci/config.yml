@@ -4,17 +4,9 @@ jobs:
   build-and-test:
     docker:
       - image: circleci/node:14  # Use Node.js Docker image for your environment
+
     steps:
       - checkout  # Checkout your code from the repo
-
-      # Install SonarScanner
-      - run:
-          name: Install SonarScanner
-          command: |
-            curl -o sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-            unzip sonar-scanner.zip
-            echo 'export PATH="$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin"' >> $BASH_ENV
-            source $BASH_ENV
 
       # Cache node_modules to speed up subsequent builds
       - restore_cache:
@@ -35,15 +27,22 @@ jobs:
             - client/node_modules
           key: v1-dependencies-{{ checksum "client/package.json" }}
 
-      # Run SonarScanner
+      # Install SonarScanner
       - run:
-          name: Run SonarQube Scan
+          name: Install SonarScanner
+          command: |
+            npm install -g sonarqube-scanner
+
+      # Run SonarQube Scan using SonarCloud with hardcoded values
+      - run:
+          name: Run SonarCloud Scan
           command: |
             cd client
             sonar-scanner \
-              -Dsonar.projectKey=APDS-Part-2-Website \
+              -Dsonar.projectKey=marcomeyer1_apds-part-2 \
+              -Dsonar.organization=marcomeyer1 \
               -Dsonar.sources=. \
-              -Dsonar.host.url=http://localhost:9000 \
+              -Dsonar.host.url=https://sonarcloud.io \
               -Dsonar.login=sqp_a3100cf5f382181eb1fae7dab76f66473d479616
 
 workflows:
