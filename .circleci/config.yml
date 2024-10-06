@@ -40,7 +40,7 @@ jobs:
           command: |
             cd client
             npx sonar-scanner \
-              -Dsonar.projectKey=marcomeyer1_apds-part-2 \
+              -Dsonar.projectKey=MarcoMeyer1_apds-part-2 \
               -Dsonar.organization=marcomeyer1 \
               -Dsonar.sources=. \
               -Dsonar.host.url=https://sonarcloud.io \
