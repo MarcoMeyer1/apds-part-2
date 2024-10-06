@@ -45,3 +45,8 @@ jobs:
               -Dsonar.sources=. \
               -Dsonar.host.url=http://localhost:9000 \
               -Dsonar.login=sqp_a3100cf5f382181eb1fae7dab76f66473d479616
+
+workflows:
+  build-and-test-workflow:
+    jobs:
+      - build-and-test
