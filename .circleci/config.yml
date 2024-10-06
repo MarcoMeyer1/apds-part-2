@@ -27,18 +27,19 @@ jobs:
             - client/node_modules
           key: v1-dependencies-{{ checksum "client/package.json" }}
 
-      # Install SonarScanner
+      # Install SonarScanner locally
       - run:
-          name: Install SonarScanner
+          name: Install SonarScanner Locally
           command: |
-            npm install -g sonarqube-scanner
+            cd client
+            npm install sonarqube-scanner
 
       # Run SonarQube Scan using SonarCloud with hardcoded values
       - run:
           name: Run SonarCloud Scan
           command: |
             cd client
-            sonar-scanner \
+            npx sonar-scanner \
               -Dsonar.projectKey=marcomeyer1_apds-part-2 \
               -Dsonar.organization=marcomeyer1 \
               -Dsonar.sources=. \
