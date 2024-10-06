@@ -34,7 +34,7 @@ jobs:
             cd client
             npm install sonarqube-scanner
 
-      # Run SonarQube Scan using SonarCloud with hardcoded values (deprecated sonar.login)
+      # Run SonarQube Scan using SonarCloud with updated syntax
       - run:
           name: Run SonarCloud Scan
           command: |
@@ -44,7 +44,7 @@ jobs:
               -Dsonar.organization=marcomeyer1 \
               -Dsonar.sources=. \
               -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.login=7f7c83654f1053d075406d09d3b2eae89326822d
+              -Dsonar.token=7f7c83654f1053d075406d09d3b2eae89326822d
 
 workflows:
   build-and-test-workflow:
