@@ -13,7 +13,8 @@ jobs:
           command: |
             curl -o sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
             unzip sonar-scanner.zip
-            export PATH="$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin"
+            echo 'export PATH="$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin"' >> $BASH_ENV
+            source $BASH_ENV
 
       # Cache node_modules to speed up subsequent builds
       - restore_cache:
@@ -44,8 +45,3 @@ jobs:
               -Dsonar.sources=. \
               -Dsonar.host.url=http://localhost:9000 \
               -Dsonar.login=sqp_a3100cf5f382181eb1fae7dab76f66473d479616
-
-workflows:
-  build-and-test-workflow:
-    jobs:
-      - build-and-test
