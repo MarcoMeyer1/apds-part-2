@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build-and-test:
     docker:
-      - image: circleci/node:18  # Updated Node.js version
+      - image: circleci/node:18-browsers  # Updated valid Docker image
 
     steps:
       - checkout  # Checkout your code from the repo
