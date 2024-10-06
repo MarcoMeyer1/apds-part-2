@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Register.css'; // Reuse the same CSS file for styling
+import './Register.css'; 
 
 const Login = () => {
     const [username, setUsername] = useState('');

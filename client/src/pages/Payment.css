@@ -1,11 +1,14 @@
 /* src/pages/Payment.css */
 
 .payment-container {
+    display: flex;
     max-width: 400px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     margin: 50px auto;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border: 3px solid #007bff;
 }
 
 .payment-form {
@@ -24,13 +27,14 @@
 
 .form-group input {
     padding: 10px;
+    max-width: 350px;
     border-radius: 4px;
     border: 1px solid #ddd;
 }
 
 button {
     padding: 10px;
-    background-color: #4CAF50;
+    background-color: #007bff !important;
     color: white;
     border: none;
     border-radius: 4px;
@@ -38,5 +42,5 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #45a049 !important;
 }

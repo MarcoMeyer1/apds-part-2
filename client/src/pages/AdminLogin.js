@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './AdminLogin.css'
 
 const AdminLogin = () => {
     const [username, setUsername] = useState('');
@@ -10,7 +11,7 @@ const AdminLogin = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(''); // Clear any previous errors
+        setError(''); 
 
         try {
             const response = await fetch('http://localhost:5000/login', {
