@@ -7,21 +7,18 @@ jobs:
     steps:
       - checkout  # Checkout your code from the repo
 
-      # Navigate to the client directory where package.json is located
-      - run:
-          name: Navigate to Client Directory
-          command: cd client
-
       # Cache node_modules to speed up subsequent builds
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "client/package.json" }}
             - v1-dependencies-
 
-      # Install dependencies from client/package.json
+      # Navigate to the client directory and install dependencies
       - run:
-          name: Install Dependencies
-          command: npm install
+          name: Install Dependencies in Client Directory
+          command: |
+            cd client
+            npm install
 
       # Save node_modules cache
       - save_cache:
@@ -32,19 +29,53 @@ jobs:
       # Run tests
       - run:
           name: Run Tests
-          command: npm test
+          command: |
+            cd client
+            npm test
 
       # Lint the code
       - run:
           name: Run Lint
-          command: npm run lint
+          command: |
+            cd client
+            npm run lint
 
       # Run security audit
       - run:
           name: Run NPM Audit
-          command: npm audit
+          command: |
+            cd client
+            npm audit
+
+  sonar-scanner:
+    docker:
+      - image: circleci/openjdk:11-jdk  # Use a Docker image with Java for SonarQube
+    steps:
+      - checkout  # Checkout your code from the repo
+
+      # Install SonarScanner CLI
+      - run:
+          name: Install SonarScanner
+          command: |
+            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+            unzip sonar-scanner-cli-4.6.2.2472-linux.zip
+            export PATH=$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
+
+      # Run SonarScanner
+      - run:
+          name: Run SonarQube Scan
+          command: |
+            sonar-scanner \
+              -Dsonar.projectKey=APDS-Part-2-Website \
+              -Dsonar.sources=./client/src \
+              -Dsonar.host.url=http://localhost:9000 \
+              -Dsonar.login=sqp_a3100cf5f382181eb1fae7dab76f66473d479616
 
 workflows:
+  version: 2
   build-and-test-workflow:
     jobs:
       - build-and-test
+      - sonar-scanner:
+          requires:
+            - build-and-test
