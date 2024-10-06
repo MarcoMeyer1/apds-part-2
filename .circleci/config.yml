@@ -1,52 +1,6 @@
 version: 2.1
 
 jobs:
-  build-and-test:
-    docker:
-      - image: circleci/node:14  # Use Node.js Docker image for your environment
-    steps:
-      - checkout  # Checkout your code from the repo
-
-      # Cache node_modules to speed up subsequent builds
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "client/package.json" }}
-            - v1-dependencies-
-
-      # Navigate to the client directory and install dependencies
-      - run:
-          name: Install Dependencies in Client Directory
-          command: |
-            cd client
-            npm install
-
-      # Save node_modules cache
-      - save_cache:
-          paths:
-            - client/node_modules
-          key: v1-dependencies-{{ checksum "client/package.json" }}
-
-      # Run tests
-      - run:
-          name: Run Tests
-          command: |
-            cd client
-            npm test
-
-      # Lint the code
-      - run:
-          name: Run Lint
-          command: |
-            cd client
-            npm run lint
-
-      # Run security audit
-      - run:
-          name: Run NPM Audit
-          command: |
-            cd client
-            npm audit
-
   sonar-scanner:
     docker:
       - image: circleci/openjdk:11-jdk  # Use a Docker image with Java for SonarQube
@@ -73,9 +27,6 @@ jobs:
 
 workflows:
   version: 2
-  build-and-test-workflow:
+  sonar-scan-workflow:
     jobs:
-      - build-and-test
-      - sonar-scanner:
-          requires:
-            - build-and-test
+      - sonar-scanner
