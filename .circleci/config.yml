@@ -1,32 +1,51 @@
 version: 2.1
 
 jobs:
-  sonar-scanner:
+  build-and-test:
     docker:
-      - image: circleci/openjdk:11-jdk  # Use a Docker image with Java for SonarQube
+      - image: circleci/node:14  # Use Node.js Docker image for your environment
     steps:
       - checkout  # Checkout your code from the repo
 
-      # Install SonarScanner CLI
+      # Install SonarScanner
       - run:
           name: Install SonarScanner
           command: |
-            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-            unzip sonar-scanner-cli-4.6.2.2472-linux.zip
-            export PATH=$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
+            curl -o sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+            unzip sonar-scanner.zip
+            export PATH="$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin"
+
+      # Cache node_modules to speed up subsequent builds
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "client/package.json" }}
+            - v1-dependencies-
+
+      # Install dependencies
+      - run:
+          name: Install Dependencies
+          command: |
+            cd client
+            npm install
+
+      # Save node_modules cache
+      - save_cache:
+          paths:
+            - client/node_modules
+          key: v1-dependencies-{{ checksum "client/package.json" }}
 
       # Run SonarScanner
       - run:
           name: Run SonarQube Scan
           command: |
+            cd client
             sonar-scanner \
               -Dsonar.projectKey=APDS-Part-2-Website \
-              -Dsonar.sources=./client/src \
+              -Dsonar.sources=. \
               -Dsonar.host.url=http://localhost:9000 \
               -Dsonar.login=sqp_a3100cf5f382181eb1fae7dab76f66473d479616
 
 workflows:
-  version: 2
-  sonar-scan-workflow:
+  build-and-test-workflow:
     jobs:
-      - sonar-scanner
+      - build-and-test
