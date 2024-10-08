@@ -13,31 +13,34 @@ body {
 }
 
 .home-form {
-  background-color: #fff; /* Make form stand out */
+  background-color: #fff; 
   padding: 2rem;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Give it a subtle shadow */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
   width: 100%;
   max-width: 400px;
   text-align: center;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  border: 3px solid #007bff;
 }
 
 .home-buttons {
   display: flex;
-  justify-content: center;
-  gap: 10px; 
+  flex-direction: column; 
+  align-items: stretch; 
   width: 100%;
 }
 
 .home-buttons button {
-  flex: 1; 
-  padding: 10px 20px;
+  width: 100%; 
+  padding: 15px; 
   font-size: 16px;
   border: none;
   background-color: #007bff;
   color: white;
   cursor: pointer;
   border-radius: 5px;
+  margin: 10px 0; 
   transition: background-color 0.3s;
 }
 

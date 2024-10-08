@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; 
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -14,21 +14,15 @@ function Home() {
             
             <div className="home-form">
                 <div className="home-buttons">
-                    <Link to="/login">
-                        <button>Log Out</button>
-                    </Link>
-                    <Link to="/register">
-                        <button>Register</button>
-                    </Link>
                     <Link to="/payment">
-                        <button>Payment</button>
+                        <button>Make a Payment</button>
                     </Link>
                     <Link to="/transactionSummary">
                         <button>Transaction Summary</button>
                     </Link>
-                 
-                        
-
+                    <Link to="/login">
+                        <button>Log Out</button>
+                    </Link>
                 </div>
             </div>
         </div>
@@ -41,7 +35,6 @@ function App() {
             <div>
                 <Routes>
                     <Route path="/" element={<Login />} />
-
                     <Route path="/home" element={<Home />} /> 
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />

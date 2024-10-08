@@ -35,7 +35,7 @@ const Login = () => {
                 if (data.role === 'Admin' || data.role === 'Employee') {
                     window.location.href = '/admin-dashboard';
                 } else {
-                    window.location.href = '/';
+                    window.location.href = '/home';
                 }
             } else {
                 // Handle errors
