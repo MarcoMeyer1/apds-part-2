@@ -10,32 +10,42 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrorMessage(''); // Clear any previous error messages
+        setErrorMessage('');  // Clear any previous error messages
 
-        const response = await fetch('http://localhost:5000/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include', // Important to send cookies with the request
-            body: JSON.stringify({ username, accountNumber, password }),
-        });
+        try {
+            const response = await fetch('http://localhost:5000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',  // Important to send cookies with the request
+                body: JSON.stringify({ username, accountNumber, password }),
+            });
 
-        if (response.ok) {
-            const data = await response.json();
-            // Optionally store role in localStorage
-            localStorage.setItem('role', data.role);
-            alert('Login Successful');
+            if (response.ok) {
+                const data = await response.json();
 
-            if (data.role === 'Admin' || data.role === 'Employee') {
-                window.location.href = '/admin-dashboard';
+                // Optionally store role in localStorage
+                localStorage.setItem('role', data.role);
+
+                // Notify user of successful login
+                alert('Login Successful');
+
+                // Redirect based on user role
+                if (data.role === 'Admin' || data.role === 'Employee') {
+                    window.location.href = '/admin-dashboard';
+                } else {
+                    window.location.href = '/';
+                }
             } else {
-                window.location.href = '/';
+                // Handle errors
+                const errorData = await response.text();
+                setErrorMessage(errorData || 'Login Failed');
             }
-        } else {
-            // Get and display the specific error message from the server response
-            const errorData = await response.text();
-            setErrorMessage(errorData || 'Login Failed');
+        } catch (error) {
+            // Handle network or fetch errors
+            setErrorMessage('An error occurred. Please try again later.');
+            console.error('Error during login:', error);
         }
     };
 

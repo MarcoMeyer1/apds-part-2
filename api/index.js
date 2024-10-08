@@ -16,11 +16,19 @@ app.use(express.json());
 app.use(cookieParser()); 
 
 // CORS configuration to allow requests from your frontend with credentials (cookies)
+
 const corsOptions = {
-    origin: 'http://localhost:3000', // Your frontend's URL
+    origin: 'https://localhost:3000', // Your frontend origin
     credentials: true, // Allow credentials (cookies) to be sent
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    optionsSuccessStatus: 204, // Some legacy browsers (like IE11) choke on 204
 };
-app.use(cors(corsOptions)); // Apply CORS settings
+
+app.use(cors(corsOptions));
+
+// Make sure you handle preflight requests by explicitly enabling OPTIONS
+app.options('*', cors(corsOptions));
 
 // Helmet middleware for securing HTTP headers
 app.use(helmet());
@@ -37,6 +45,11 @@ const limiter = rateLimit({
     message: 'Too many requests from this IP, please try again after 15 minutes'
 });
 app.use(limiter); // Apply rate limiting to all requests
+
+app.use((req, res, next) => {
+    res.header('Cache-Control', 'no-store');  // Disable caching
+    next();
+});
 
 // Database connection setup
 const dbConfig = {
@@ -177,10 +190,10 @@ app.post('/login', bruteForceProtection.prevent, async (req, res) => {
 
         // Set HttpOnly cookie with the token
         res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // Ensures HTTPS only in production
-            sameSite: 'Strict', // Prevents CSRF by allowing same-site requests only
-            maxAge: 60 * 60 * 1000, // 1 hour expiration
+            httpOnly: true, 
+    secure: process.env.NODE_ENV === 'production', // Ensures HTTPS in production
+    sameSite: 'Strict', 
+    maxAge: 60 * 60 * 1000, // 1 hour expiration
         });
 
         res.status(200).json({ message: 'Login successful' });
