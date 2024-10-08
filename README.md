@@ -36,6 +36,18 @@ To harden the portal against common security threats, we have implemented severa
 
 As part of our continuous integration and security pipeline, we have integrated **CircleCI** for automated testing and deployment. Additionally, we have integrated **SonarCloud** to run **SonarScanner** in the workflow, analyzing the codebase for security vulnerabilities, bugs, and code quality issues. This is a key aspect of our **DevSecOps** process to ensure secure development practices.
 
+### CircleCI Workflow Example:
+![CircleCI Dashboard](./Screenshots/CircleCiDashboard.png)
+
+---
+
+## SonarCloud Integration
+
+The SonarScanner is configured in the CircleCI pipeline to scan the codebase for code quality and security issues. It provides insights into bugs, security vulnerabilities, code smells, and code duplications. This integration is key to maintaining high code quality throughout the development lifecycle.
+
+### SonarCloud Analysis Results:
+![SonarCloud Results](./Screenshots/SonarCloudResults.png)
+
 ---
 
 ## Running the App
