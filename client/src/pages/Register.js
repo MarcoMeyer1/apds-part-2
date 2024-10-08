@@ -29,6 +29,7 @@ const Register = () => {
 
         if (response.status === 201) {
             alert('Registration Successful');
+            window.location.href = '/login';
         } else {
             // Try to get the specific error message from the response
             const errorData = await response.text(); // Use .text() to get the raw error message from the server
