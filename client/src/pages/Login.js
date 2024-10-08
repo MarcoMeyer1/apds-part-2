@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import './Register.css';
 
 const Login = () => {
@@ -73,6 +74,11 @@ const Login = () => {
                         required 
                     />
                 </div>
+
+                <div className="form-group">
+                    <p>Don't have an account? <Link to="/register">Register here!</Link></p>
+                </div>
+
                 <button type="submit">Login</button>
             </form>
         </div>

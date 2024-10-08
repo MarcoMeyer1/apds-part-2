@@ -13,10 +13,9 @@ function Home() {
             <h2>Welcome to the Homepage!</h2>
             
             <div className="home-form">
-            <p>Please login or register if you don't already have an account!</p>
                 <div className="home-buttons">
                     <Link to="/login">
-                        <button>Login</button>
+                        <button>Log Out</button>
                     </Link>
                     <Link to="/register">
                         <button>Register</button>
@@ -40,14 +39,14 @@ function App() {
     return (
         <Router>
             <div>
-            <Routes>
-                    <Route path="/" element={<Home />} />
+                <Routes>
+                    <Route path="/" element={<Login />} />
+
+                    <Route path="/home" element={<Home />} /> 
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/payment" element={<Payment />} />
-                   
-                    <Route path="/transactionSummary" element={<TransactionSummary />} /> {/* Transaction Summary */}
-                
+                    <Route path="/transactionSummary" element={<TransactionSummary />} /> 
                 </Routes>
             </div>
         </Router>
