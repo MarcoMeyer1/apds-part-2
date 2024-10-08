@@ -1,46 +1,46 @@
 /* src/pages/Payment.css */
 
 .payment-container {
-    display: flex;
-    max-width: 400px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    margin: 50px auto;
-    padding: 20px;
-    border: 3px solid #007bff;
+  display: flex;
+  max-width: 400px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  margin: 50px auto;
+  padding: 20px;
+  border: 3px solid #007bff;
 }
 
 .payment-form {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .form-group {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .form-group label {
-    margin-bottom: 5px;
-    font-weight: bold;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
 .form-group input {
-    padding: 10px;
-    max-width: 350px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
+  padding: 10px;
+  max-width: 350px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
 }
 
 button {
-    padding: 10px;
-    background-color: #007bff !important;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  padding: 10px;
+  background-color: #007bff !important;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 button:hover {
-    background-color: #45a049 !important;
+  background-color: #45a049 !important;
 }

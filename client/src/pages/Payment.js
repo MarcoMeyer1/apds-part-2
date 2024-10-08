@@ -12,19 +12,17 @@ const Payment = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorMessage(''); // Clear any previous error messages
-
-        console.log('Submitting payment:', { amount, currency, provider, swiftCode });
-
+    
         try {
-            const response = await fetch('http://localhost:5000/payment', {
+            const response = await fetch('https://localhost:5000/payment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                credentials: 'include', // Ensure cookies are included in the request
+                credentials: 'include', // Include cookies with the request
                 body: JSON.stringify({ amount, currency, provider, swiftCode }),
             });
-
+    
             if (response.ok) {
                 alert('Payment Processed Successfully');
             } else {
@@ -36,6 +34,7 @@ const Payment = () => {
             setErrorMessage('Payment failed due to an error. Please try again later.');
         }
     };
+    
 
     return (
         <div className="payment-container">

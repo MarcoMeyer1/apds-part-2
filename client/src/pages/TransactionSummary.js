@@ -8,7 +8,7 @@ const TransactionSummary = () => {
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
-                const response = await fetch('http://localhost:5000/transactions', {
+                const response = await fetch('https://localhost:5000/transactions', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

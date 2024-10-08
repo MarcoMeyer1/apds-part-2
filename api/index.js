@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const sql = require('mssql');
 const cors = require('cors');
 const helmet = require('helmet');
+const fs = require("fs");
+const https = require('https');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const ExpressBrute = require('express-brute');
@@ -16,6 +18,11 @@ app.use(express.json());
 app.use(cookieParser()); 
 
 // CORS configuration to allow requests from your frontend with credentials (cookies)
+
+const options = {
+    key: fs.readFileSync('../client/localhost-key.pem'), // Path to the key file
+    cert: fs.readFileSync('../client/localhost.pem'),    // Path to the cert file
+};
 
 const corsOptions = {
     origin: 'https://localhost:3000', // Your frontend origin
@@ -50,6 +57,8 @@ app.use((req, res, next) => {
     res.header('Cache-Control', 'no-store');  // Disable caching
     next();
 });
+
+
 
 // Database connection setup
 const dbConfig = {
@@ -149,51 +158,40 @@ app.post('/register', bruteForceProtection.prevent, async (req, res) => {
 });
 
 // Login endpoint with brute-force protection
-app.post('/login', bruteForceProtection.prevent, async (req, res) => {
+app.post('/login', async (req, res) => {
     const { username, accountNumber, password } = req.body;
-
-    // RegEx validation for inputs
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
     const accountNumberRegex = /^[0-9]+$/;
 
-    if (!usernameRegex.test(username)) {
-        return res.status(400).send('Invalid username format.');
+    if (!usernameRegex.test(username) || !accountNumberRegex.test(accountNumber)) {
+        return res.status(400).send('Invalid input format.');
     }
-    if (!accountNumberRegex.test(accountNumber)) {
-        return res.status(400).send('Invalid account number format.');
-    }
-
-    const query = `SELECT * FROM Users WHERE Username = @username AND AccountNumber = @accountNumber`;
 
     try {
+        const query = `SELECT * FROM Users WHERE Username = @username AND AccountNumber = @accountNumber`;
         const request = new sql.Request();
         request.input('username', sql.VarChar, username);
         request.input('accountNumber', sql.VarChar, accountNumber);
         const result = await request.query(query);
 
         if (result.recordset.length === 0) {
-            return res.status(404).send('Username or account number is incorrect.');
+            return res.status(404).send('Invalid credentials.');
         }
 
         const user = result.recordset[0];
         const isPasswordMatch = await bcrypt.compare(password, user.PasswordHash);
 
         if (!isPasswordMatch) {
-            return res.status(400).send('Incorrect password.');
+            return res.status(400).send('Invalid credentials.');
         }
 
-        // Create a JWT token
-        const token = jwt.sign({ id: user.ID, role: user.Role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-        // Log the generated token for debugging
-        console.log('Generated JWT Token:', token);
-
-        // Set HttpOnly cookie with the token
-        res.cookie('token', token, {
-            httpOnly: true, 
-    secure: process.env.NODE_ENV === 'production', // Ensures HTTPS in production
-    sameSite: 'Strict', 
-    maxAge: 60 * 60 * 1000, // 1 hour expiration
+        // Generate JWT token
+        const token = jwt.sign({ id: user.ID }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.cookie('JWT-SESSION', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'Lax',
+            maxAge: 60 * 60 * 1000, // 1 hour expiration
         });
 
         res.status(200).json({ message: 'Login successful' });
@@ -206,17 +204,40 @@ app.post('/login', bruteForceProtection.prevent, async (req, res) => {
 // Payment endpoint
 app.post('/payment', async (req, res) => {
     try {
-        const token = req.cookies.token; // Get the token from the HttpOnly cookie
+        // Get the token from 'JWT-SESSION' cookie
+        const token = req.cookies['JWT-SESSION'];
+        console.log('Cookies:', req.cookies);
         if (!token) {
             return res.status(401).send('Authorization token is missing');
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token
-        const userID = decoded.id; // Extract user ID from the token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userID = decoded.id;
 
-        // Proceed with inserting payment
+        // Extract payment details from the request body
         const { amount, currency, provider, swiftCode } = req.body;
 
+        // Regular expression validation for each field
+        const amountRegex = /^\d+(\.\d{1,2})?$/;  // Allows numeric values with up to 2 decimal places
+        const currencyRegex = /^[A-Z]{3}$/;  // Ensures currency is in uppercase ISO 4217 format (e.g., USD, EUR, ZAR)
+        const providerRegex = /^[a-zA-Z\s]+$/;  // Allows only letters and spaces (for provider names)
+        const swiftCodeRegex = /^[A-Z0-9]{8,11}$/;  // SWIFT code must be alphanumeric with 8-11 characters
+
+        // Validate each field using the regex patterns
+        if (!amountRegex.test(amount)) {
+            return res.status(400).send('Invalid amount format. Only numbers with up to 2 decimal places are allowed.');
+        }
+        if (!currencyRegex.test(currency)) {
+            return res.status(400).send('Invalid currency format. Must be a 3-letter ISO 4217 currency code.');
+        }
+        if (!providerRegex.test(provider)) {
+            return res.status(400).send('Invalid provider name. Only letters and spaces are allowed.');
+        }
+        if (!swiftCodeRegex.test(swiftCode)) {
+            return res.status(400).send('Invalid SWIFT code format. Must be alphanumeric and 8-11 characters long.');
+        }
+
+        // Proceed with inserting payment into the database
         const query = `INSERT INTO Payments (Amount, Currency, Provider, SWIFTCode, UserID) 
                        VALUES (@amount, @currency, @provider, @swiftCode, @userID)`;
         const request = new sql.Request();
@@ -230,18 +251,21 @@ app.post('/payment', async (req, res) => {
         res.status(201).send('Payment Processed');
     } catch (err) {
         if (err.name === 'JsonWebTokenError') {
-            console.error('JWT Error:', err.message); // Log detailed JWT error
+            console.error('JWT Error:', err.message);
             return res.status(401).send('Invalid or malformed token');
         }
 
-        console.error('Error during payment processing:', err); // Log general errors
+        console.error('Error during payment processing:', err);
         res.status(500).send('Payment Failed');
     }
 });
 
+
+
 // Transactions endpoint
 app.get('/transactions', async (req, res) => {
-    const token = req.cookies.token; // Get token from the HttpOnly cookie
+    // Correcting the key to match the cookie set in the login route
+    const token = req.cookies['JWT-SESSION']; // Get token from the 'JWT-SESSION' cookie
 
     if (!token) {
         return res.status(401).send('Authorization token is missing');
@@ -258,10 +282,11 @@ app.get('/transactions', async (req, res) => {
 
         res.status(200).json(result.recordset); // Return the transactions
     } catch (err) {
-        console.error('Error verifying token:', err);
+        console.error('Error fetching transactions:', err); // Log the error for debugging
         res.status(500).send('Failed to fetch transactions');
     }
 });
+
 
 // Verify transaction endpoint
 app.put('/verify-transaction/:id', async (req, res) => {
@@ -285,7 +310,9 @@ app.put('/verify-transaction/:id', async (req, res) => {
         res.status(500).send('Verification Failed');
     }
 });
-
+const server = https.createServer(options, app);
 // Server start
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () => {
+    console.log(`Secure server running on https://localhost:${PORT}`);
+});
