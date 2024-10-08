@@ -44,7 +44,8 @@ jobs:
               -Dsonar.organization=marcomeyer1 \
               -Dsonar.sources=. \
               -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.token=7f7c83654f1053d075406d09d3b2eae89326822d
+              -Dsonar.token=7f7c83654f1053d075406d09d3b2eae89326822d \
+              -X
 
 workflows:
   build-and-test-workflow:
