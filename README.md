@@ -1,4 +1,3 @@
-# Project Title
 
 ## Overview
 
@@ -72,6 +71,7 @@ To run the project locally, follow these steps:
 
    ```bash
    npm install
+   npm install cross-env --save-dev
    npm start
    ```
 
