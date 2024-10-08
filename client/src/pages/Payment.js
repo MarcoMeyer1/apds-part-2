@@ -8,7 +8,6 @@ const Payment = () => {
     const [swiftCode, setSwiftCode] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    // Ensure handleSubmit is defined correctly
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorMessage(''); // Clear any previous error messages
@@ -42,7 +41,6 @@ const Payment = () => {
             <form className="payment-form" onSubmit={handleSubmit}>
                 <h2>Make a Payment</h2>
 
-                {/* Display error message if any */}
                 {errorMessage && <div className="error-message">{errorMessage}</div>}
 
                 <div className="form-group">

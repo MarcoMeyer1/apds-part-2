@@ -12,7 +12,7 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrorMessage(''); // Clear any previous error messages
+        setErrorMessage(''); 
 
         if (password !== confirmPassword) {
             setErrorMessage('Passwords do not match');
@@ -31,8 +31,7 @@ const Register = () => {
             alert('Registration Successful');
             window.location.href = '/login';
         } else {
-            // Try to get the specific error message from the response
-            const errorData = await response.text(); // Use .text() to get the raw error message from the server
+            const errorData = await response.text(); 
             setErrorMessage(errorData || 'Registration Failed');
         }
     };
@@ -42,7 +41,6 @@ const Register = () => {
             <form className="register-form" onSubmit={handleSubmit}>
                 <h2>Register</h2>
 
-                {/* Display error message if any */}
                 {errorMessage && <div className="error-message">{errorMessage}</div>}
 
 
