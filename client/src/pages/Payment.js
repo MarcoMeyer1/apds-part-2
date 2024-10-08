@@ -25,6 +25,7 @@ const Payment = () => {
     
             if (response.ok) {
                 alert('Payment Processed Successfully');
+                window.location.href = '/home';
             } else {
                 const errorData = await response.text();
                 setErrorMessage(errorData || 'Payment Failed');
@@ -76,7 +77,7 @@ const Payment = () => {
                     <input 
                         type="text" 
                         value={swiftCode} 
-                        onChange={(e) => setSwiftCode(e.target.value)} 
+                        onChange={(e) => setSwiftCode(e.target.value.toUpperCase())} 
                         required 
                     />
                 </div>
