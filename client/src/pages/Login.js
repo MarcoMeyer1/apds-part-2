@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link } from 'react-router-dom'; 
 import './Register.css';
 
 const Login = () => {
@@ -25,7 +25,7 @@ const Login = () => {
             if (response.ok) {
                 const data = await response.json();
 
-                // Optionally store role in localStorage
+                //Store role in localStorage
                 localStorage.setItem('role', data.role);
 
                 // Notify user of successful login
@@ -54,7 +54,6 @@ const Login = () => {
             <form className="register-form" onSubmit={handleSubmit}>
                 <h2>Login</h2>
 
-                {/* Display error message if any */}
                 {errorMessage && <div className="error-message">{errorMessage}</div>}
 
                 <div className="form-group">
