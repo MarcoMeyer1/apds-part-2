@@ -180,7 +180,7 @@ app.post('/login', async (req, res) => {
         }
 
         // Generate JWT token
-        const token = jwt.sign({ id: user.ID }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.ID, role: user.Role }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.cookie('JWT-SESSION', token, {
             httpOnly: true,
             secure: true,
@@ -188,12 +188,14 @@ app.post('/login', async (req, res) => {
             maxAge: 60 * 60 * 1000, // 1 hour
         });
 
-        res.status(200).json({ message: 'Login successful' });
+        // Send response with role
+        res.status(200).json({ message: 'Login successful', role: user.Role });
     } catch (err) {
         console.error('Error during login:', err);
         res.status(500).send('Login Failed. Please try again later.');
     }
 });
+
 
 app.post('/payment', async (req, res) => {
     try {
@@ -293,6 +295,111 @@ app.put('/verify-transaction/:id', async (req, res) => {
         res.status(500).send('Verification Failed');
     }
 });
+
+
+
+//EMPLOYEE ENDPOINTS
+
+
+
+app.get('/api/employee/transactions', async (req, res) => {
+    const token = req.cookies['JWT-SESSION'];
+
+    if (!token) {
+        return res.status(401).send('Authorization token is missing');
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (decoded.role !== 'Employee') {
+            return res.status(403).send('Access denied');
+        }
+
+        const query = `SELECT * FROM Payments ORDER BY CreatedAt DESC`;
+        const request = new sql.Request();
+        const result = await request.query(query);
+
+        res.status(200).json(result.recordset);
+    } catch (err) {
+        console.error('Error fetching transactions:', err.message);
+        res.status(500).send('Failed to fetch transactions');
+    }
+});
+
+
+
+
+app.put('/api/employee/transaction/verify/:id', async (req, res) => {
+    const token = req.cookies['JWT-SESSION'];
+    const transactionID = req.params.id;
+    const { swiftCode } = req.body;
+
+    if (!token) {
+        return res.status(401).send('Authorization token is missing');
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (decoded.role !== 'Employee') {
+            return res.status(403).send('Access denied');
+        }
+
+        const query = `UPDATE Payments SET Verified = 1 WHERE ID = @transactionID AND SWIFTCode = @swiftCode`;
+        const request = new sql.Request();
+        request.input('transactionID', sql.Int, transactionID);
+        request.input('swiftCode', sql.VarChar, swiftCode);
+        const result = await request.query(query);
+
+        if (result.rowsAffected[0] === 0) {
+            return res.status(400).send('Invalid SWIFT Code or Transaction not found');
+        }
+
+        res.status(200).send('Transaction Verified');
+    } catch (err) {
+        console.error('Error during transaction verification:', err);
+        res.status(500).send('Verification Failed');
+    }
+});
+
+app.put('/api/employee/transaction/unverify/:id', async (req, res) => {
+    const token = req.cookies['JWT-SESSION'];
+    const transactionID = req.params.id;
+
+    if (!token) {
+        return res.status(401).send('Authorization token is missing');
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (decoded.role !== 'Employee') {
+            return res.status(403).send('Access denied');
+        }
+
+        const query = `UPDATE Payments SET Verified = 0 WHERE ID = @transactionID`;
+        const request = new sql.Request();
+        request.input('transactionID', sql.Int, transactionID);
+        const result = await request.query(query);
+
+        if (result.rowsAffected[0] === 0) {
+            return res.status(400).send('Transaction not found');
+        }
+
+        res.status(200).send('Transaction Unverified');
+    } catch (err) {
+        console.error('Error during transaction unverification:', err);
+        res.status(500).send('Unverification Failed');
+    }
+});
+
+
+
+
+
+
+
 
 const server = https.createServer(options, app);
 
