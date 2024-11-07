@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; 
+import "./Login.css";
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -33,8 +34,7 @@ const Login = () => {
                 // Redirect based on user role
                 if (data.role === 'Employee') {
                     window.location.href = '/employee-dashboard';
-                } else {
-                    window.location.href = '/home';
+                
                 }
             } else {
                 // Handle errors
@@ -49,13 +49,18 @@ const Login = () => {
     };
 
     return (
-        <div className="register-container">
-            <form className="register-form" onSubmit={handleSubmit}>
-                <h2>Login</h2>
+        <div className="login-page">
+    {/* Blue Gradient Background */}
+    <div className="gradient-background"></div>
 
-                {errorMessage && <div className="error-message">{errorMessage}</div>}
+    {/* Login Form */}
+    <div className="login-container">
+        <form className="login-form" onSubmit={handleSubmit}>
+            <h2>Login</h2>
 
-                <div className="form-group">
+            {errorMessage && <div className="error-message">{errorMessage}</div>}
+
+            <div className="form-group">
                     <label>Username</label>
                     <input 
                         type="text" 
@@ -65,7 +70,7 @@ const Login = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>Account Number</label>
+                    <label>Employee Number</label>
                     <input 
                         type="text" 
                         value={accountNumber} 
@@ -83,9 +88,10 @@ const Login = () => {
                     />
                 </div>
 
-                <button type="submit">Login</button>
-            </form>
-        </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</div>
     );
 };
 
