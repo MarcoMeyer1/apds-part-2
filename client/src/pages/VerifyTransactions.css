@@ -1,0 +1,44 @@
+.verify-transactions-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.verify-button, .unverify-button {
+    padding: 5px 10px;
+    font-size: 14px;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.verify-button {
+    background-color: #28a745;
+}
+
+.verify-button:hover {
+    background-color: #218838;
+}
+
+.unverify-button {
+    background-color: #dc3545;
+}
+
+.unverify-button:hover {
+    background-color: #c82333;
+}

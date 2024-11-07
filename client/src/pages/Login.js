@@ -32,8 +32,8 @@ const Login = () => {
                 alert('Login Successful');
 
                 // Redirect based on user role
-                if (data.role === 'Admin' || data.role === 'Employee') {
-                    window.location.href = '/admin-dashboard';
+                if (data.role === 'Employee') {
+                    window.location.href = '/employee-dashboard';
                 } else {
                     window.location.href = '/home';
                 }

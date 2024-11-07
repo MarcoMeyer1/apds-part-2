@@ -4,6 +4,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Payment from './pages/Payment'; 
 import TransactionSummary from './pages/TransactionSummary';
+import EmployeeDashboard from './pages/EmployeeDashboard';
+import VerifyTransactions from './pages/VerifyTransactions';
 
 import './App.css'; 
 
@@ -39,7 +41,9 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/payment" element={<Payment />} />
+                    <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
                     <Route path="/transactionSummary" element={<TransactionSummary />} /> 
+                    <Route path="/verify-transactions" element={<VerifyTransactions />} />
                 </Routes>
             </div>
         </Router>
