@@ -34,8 +34,7 @@ const Login = () => {
                 // Redirect based on user role
                 if (data.role === 'Employee') {
                     window.location.href = '/employee-dashboard';
-                } else {
-                    window.location.href = '/home';
+                
                 }
             } else {
                 // Handle errors
@@ -62,23 +61,32 @@ const Login = () => {
             {errorMessage && <div className="error-message">{errorMessage}</div>}
 
             <div className="form-group">
-                <label>Employee Number</label>
-                <input 
-                    type="text" 
-                    value={accountNumber} 
-                    onChange={(e) => setAccountNumber(e.target.value)} 
-                    required 
-                />
-            </div>
-            <div className="form-group">
-                <label>Password</label>
-                <input 
-                    type="password" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                    required 
-                />
-            </div>
+                    <label>Username</label>
+                    <input 
+                        type="text" 
+                        value={username} 
+                        onChange={(e) => setUsername(e.target.value)} 
+                        required 
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Employee Number</label>
+                    <input 
+                        type="text" 
+                        value={accountNumber} 
+                        onChange={(e) => setAccountNumber(e.target.value)} 
+                        required 
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Password</label>
+                    <input 
+                        type="password" 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
+                        required 
+                    />
+                </div>
 
             <button type="submit">Login</button>
         </form>
