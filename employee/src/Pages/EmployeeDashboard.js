@@ -31,41 +31,56 @@ const EmployeeDashboard = () => {
 
     return (
         <div className="dashboard-container">
-            <div className="profile-header">
-                <div className="profile-info">
-                    <h2>Welcome back John</h2>
-                    <p>johndoe@example.com</p>
-                    <p><strong>Employee ID:</strong> 12345</p>
-                    <p><strong>Position:</strong> Transaction Specialist</p>
-                    <p><strong>Department:</strong> Finance</p>
-                    <p><strong>Manager:</strong> Jane Smith</p>
-                </div>
-                <div className="profile-picture-container" onClick={triggerFileInput}>
-                    <div className="profile-picture">
-                        {profileImage ? (
-                            <img src={profileImage} alt="Profile" style={{ width: '100%', height: '100%' }} />
-                        ) : (
-                            'Profile Pic'
-                        )}
-                    </div>
-                    <input
-                        id="file-upload"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden-file-input"
-                    />
-                </div>
+    {/* Top gradient banner */}
+    <div className="profile-banner"></div>
+
+    {/* Spacer to move the profile section down */}
+    <div className="spacer"></div>
+
+    {/* Profile Card */}
+    <div className="profile-card">
+        {/* Profile picture overlapping the banner and the card */}
+        <div className="profile-picture-container" onClick={triggerFileInput}>
+            <div className="profile-picture">
+                {profileImage ? (
+                    <img src={profileImage} alt="Profile" />
+                ) : (
+                    <span>Profile Pic</span>
+                )}
             </div>
-            <div className="button-container">
-                <button onClick={handleVerifyTransactions} className="action-button">
-                    Verify Transaction
-                </button>
-                <button onClick={handleManageTransactions} className="action-button">
-                    Manage Transactions
-                </button>
+            <input
+                id="file-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden-file-input"
+            />
+        </div>
+
+        {/* Profile Information */}
+        <div className="profile-info">
+            <h2>Welcome back John Doe</h2>
+            <p>johndoe@example.com</p>
+            
+            <div className="profile-details">
+              <p><strong>Employee ID:</strong> 12345</p>
+              <p><strong>Position:</strong> Specialist</p>
+              <p><strong>Department:</strong> Finance</p>
+              <p><strong>Manager:</strong> Jane Smith</p>
             </div>
         </div>
+
+        {/* Action Buttons */}
+        <div className="button-container">
+            <button onClick={handleVerifyTransactions} className="action-button">
+                Verify Transactions
+            </button>
+            <button onClick={handleManageTransactions} className="action-button">
+                Manage Transactions
+            </button>
+        </div>
+    </div>
+</div>
     );
 };
 
