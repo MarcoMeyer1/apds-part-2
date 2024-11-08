@@ -10,6 +10,10 @@ const EmployeeDashboard = () => {
         navigate('/verify-transactions');
     };
 
+    const handleManageTransactions = () => {
+        navigate('/manage-transactions');
+    };
+
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -27,13 +31,21 @@ const EmployeeDashboard = () => {
 
     return (
         <div className="dashboard-container">
-            <div className="profile-container">
-                <div className="profile-picture-container">
-                    <div className="profile-picture" onClick={triggerFileInput}>
+            <div className="profile-header">
+                <div className="profile-info">
+                    <h2>Welcome back John</h2>
+                    <p>johndoe@example.com</p>
+                    <p><strong>Employee ID:</strong> 12345</p>
+                    <p><strong>Position:</strong> Transaction Specialist</p>
+                    <p><strong>Department:</strong> Finance</p>
+                    <p><strong>Manager:</strong> Jane Smith</p>
+                </div>
+                <div className="profile-picture-container" onClick={triggerFileInput}>
+                    <div className="profile-picture">
                         {profileImage ? (
                             <img src={profileImage} alt="Profile" style={{ width: '100%', height: '100%' }} />
                         ) : (
-                            'No Image'
+                            'Profile Pic'
                         )}
                     </div>
                     <input
@@ -44,40 +56,17 @@ const EmployeeDashboard = () => {
                         className="hidden-file-input"
                     />
                 </div>
-                <div className="profile-title">Employee Profile</div>
-                <div className="profile-info">
-                    <span>Username:</span> johndoe
-                </div>
-                <div className="profile-info">
-                    <span>Employee ID:</span> 12345
-                </div>
-                <div className="profile-info">
-                    <span>Position:</span> Transaction Specialist
-                </div>
-                <div className="profile-info">
-                    <span>Department:</span> Finance
-                </div>
-                <div className="profile-info">
-                    <span>Hire Date:</span> January 15, 2020
-                </div>
-                <div className="profile-info">
-                    <span>Office Location:</span> New York HQ
-                </div>
-                <div className="profile-info">
-                    <span>Manager:</span> Jane Smith
-                </div>
-                <div className="profile-info">
-                    <span>Email:</span> johndoe@example.com
-                </div>
-                <div className="profile-info">
-                    <span>Phone:</span> +1 (555) 012-3456
-                </div>
-                <button onClick={handleVerifyTransactions} className="verify-button">
-                    Verify Transactions
+            </div>
+            <div className="button-container">
+                <button onClick={handleVerifyTransactions} className="action-button">
+                    Verify Transaction
+                </button>
+                <button onClick={handleManageTransactions} className="action-button">
+                    Manage Transactions
                 </button>
             </div>
         </div>
     );
 };
 
-export default EmployeeDashboard;
+export default EmployeeDashboard; 
