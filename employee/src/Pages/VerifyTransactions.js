@@ -93,7 +93,7 @@ const VerifyTransactions = () => {
     return (
         
         <div>
-            <div className="verify-banner"></div>
+            <div className="gradient-background"></div>
             <h2 className="page-title">Verify Transactions</h2>
 
 {/* Success message positioned above the tables */}
