@@ -75,8 +75,6 @@ table {
     margin-top: 10px;
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
-    border-bottom-left-radius: 10%;
-    border-bottom-right-radius: 10%;
 }
 
 th, td {
