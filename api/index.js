@@ -97,9 +97,9 @@ app.post('/register', bruteForceProtection.prevent, async (req, res) => {
     const { fullName, username, idNumber, accountNumber, password } = req.body;
 
     // Regex patterns to validate user input
-    const usernameRegex = /^[a-zA-Z0-9_]+$/;      // Allows letters, numbers, and underscores
-    const accountNumberRegex = /^[0-9]+$/;        // Allows only digits
-    const idNumberRegex = /^[0-9]{13}$/;          // Exactly 13 digits
+    const usernameRegex = /^[a-zA-Z0-9_]+$/; // Allows letters, numbers, and underscores
+    const accountNumberRegex = /^[0-9]+$/; // Allows only digits
+    const idNumberRegex = /^[0-9]{13}$/; // Exactly 13 digits
 
     if (!usernameRegex.test(username)) {
         return res.status(400).send('Invalid username format. Only alphanumeric characters and underscores are allowed.');
@@ -122,18 +122,19 @@ app.post('/register', bruteForceProtection.prevent, async (req, res) => {
             return res.status(400).send('Username already exists. Please choose a different one.');
         }
 
-        // Proceed with user registration (SHA-256 + bcrypt hashing)
-        const sha256Password = crypto.createHash('sha256').update(password).digest('hex');
-        const hashedPassword = await bcrypt.hash(sha256Password, 14);  
+        // Generate salt and hashed password using the new method
+        const salt = generateSalt();
+        const hashedPassword = hashPassword(password, salt);
 
-        const query = `INSERT INTO Users (FullName, Username, IDNumber, AccountNumber, PasswordHash) 
-                       VALUES (@fullName, @username, @idNumber, @accountNumber, @password)`;
+        const query = `INSERT INTO Users (FullName, Username, IDNumber, AccountNumber, PasswordHash, Salt) 
+                       VALUES (@fullName, @username, @idNumber, @accountNumber, @password, @salt)`;
         const request = new sql.Request();
         request.input('fullName', sql.VarChar, fullName);
         request.input('username', sql.VarChar, username);
         request.input('idNumber', sql.VarChar, idNumber);
         request.input('accountNumber', sql.VarChar, accountNumber);
         request.input('password', sql.VarChar, hashedPassword);
+        request.input('salt', sql.VarChar, salt);
 
         await request.query(query);
         res.status(201).send('User Registered Successfully');
@@ -151,8 +152,8 @@ app.post('/login', async (req, res) => {
     const { username, accountNumber, password } = req.body;
 
     // Regex patterns to validate login input
-    const usernameRegex = /^[a-zA-Z0-9_]+$/;  // Allows letters, numbers, and underscores
-    const accountNumberRegex = /^[0-9]+$/;    // Allows only digits
+    const usernameRegex = /^[a-zA-Z0-9_]+$/; // Allows letters, numbers, and underscores
+    const accountNumberRegex = /^[0-9]+$/; // Allows only digits
 
     if (!usernameRegex.test(username) || !accountNumberRegex.test(accountNumber)) {
         return res.status(400).send('Invalid input format.');
@@ -171,9 +172,8 @@ app.post('/login', async (req, res) => {
 
         const user = result.recordset[0];
 
-        // Combine SHA-256 with bcrypt for password comparison
-        const sha256Password = crypto.createHash('sha256').update(password).digest('hex');
-        const isPasswordMatch = await bcrypt.compare(sha256Password, user.PasswordHash);
+        // Verify password using multiple hashing algorithms with salt
+        const isPasswordMatch = user.PasswordHash === hashPassword(password, user.Salt);
 
         if (!isPasswordMatch) {
             return res.status(400).send('Invalid credentials.');
@@ -195,6 +195,7 @@ app.post('/login', async (req, res) => {
         res.status(500).send('Login Failed. Please try again later.');
     }
 });
+
 
 
 app.post('/payment', async (req, res) => {
@@ -395,6 +396,72 @@ app.put('/api/employee/transaction/unverify/:id', async (req, res) => {
 });
 
 
+
+
+
+function generateSalt() {
+    return crypto.randomBytes(16).toString('hex');
+}
+
+function hashPassword(password, salt) {
+    const hashes = [
+        crypto.createHmac('sha256', salt).update(password).digest('hex'),
+        crypto.createHmac('sha512', salt).update(password).digest('hex'),
+        crypto.createHmac('sha1', salt).update(password).digest('hex'),
+        crypto.createHmac('md5', salt).update(password).digest('hex'),
+        crypto.createHmac('ripemd160', salt).update(password).digest('hex'),
+    ];
+    return hashes.join('|'); // Combining hashes with a separator
+}
+
+const verifyPassword = (enteredPassword, storedHash, salt) => {
+    const enteredHash = hashPassword(enteredPassword, salt);
+    return storedHash === enteredHash;
+};
+
+app.post('/employee-login', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        // Ensure a valid connection
+        const pool = await sql.connect(dbConfig);
+
+        // Query the employee by username
+        const request = pool.request();
+        request.input('username', sql.VarChar, username);
+        const result = await request.query(`SELECT * FROM Employees WHERE Username = @username`);
+
+        // Check if user exists
+        if (result.recordset.length === 0) {
+            return res.status(401).send('Invalid username or password.');
+        }
+
+        const employee = result.recordset[0];
+        const { PasswordHash, Salt, Role } = employee;
+
+        // Verify password
+        if (!verifyPassword(password, PasswordHash, Salt)) {
+            return res.status(401).send('Invalid username or password.');
+        }
+
+        // Generate JWT token
+        const token = jwt.sign({ id: employee.ID, role: Role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        
+        // Set token as a secure cookie
+        res.cookie('JWT-SESSION', token, {
+            httpOnly: true,
+            secure: true, // Ensure this is true in production
+            sameSite: 'Lax',
+            maxAge: 60 * 60 * 1000 // 1 hour
+        });
+
+        // Send response with role
+        res.json({ message: 'Login Successful', role: Role });
+    } catch (error) {
+        console.error('Server error:', error);
+        res.status(500).send('Server error');
+    }
+});
 
 
 

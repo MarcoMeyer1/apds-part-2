@@ -10,43 +10,33 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrorMessage('');  // Clear any previous error messages
-
+        setErrorMessage('');
+    
         try {
-            const response = await fetch('https://localhost:5000/login', {
+            const response = await fetch('https://localhost:5000/employee-login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                credentials: 'include',  // Important to send cookies with the request
+                credentials: 'include',
                 body: JSON.stringify({ username, accountNumber, password }),
             });
-
+    
             if (response.ok) {
                 const data = await response.json();
-
-                //Store role in localStorage
-                localStorage.setItem('role', data.role);
-
-                // Notify user of successful login
                 alert('Login Successful');
-
-                // Redirect based on user role
                 if (data.role === 'Employee') {
                     window.location.href = '/employee-dashboard';
-                
                 }
             } else {
-                // Handle errors
                 const errorData = await response.text();
                 setErrorMessage(errorData || 'Login Failed');
             }
         } catch (error) {
-            // Handle network or fetch errors
             setErrorMessage('An error occurred. Please try again later.');
-            console.error('Error during login:', error);
         }
     };
+    
 
     return (
         <div className="login-page">
