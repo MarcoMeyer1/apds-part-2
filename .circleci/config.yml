@@ -55,7 +55,7 @@ jobs:
             cd ../employee && npm install
 
       - run:
-         name: Run SonarCloud Scan
+          name: Run SonarCloud Scan
           command: |
             sonar-scanner \
               -Dsonar.projectKey=MarcoMeyer1_apds-part-2 \
