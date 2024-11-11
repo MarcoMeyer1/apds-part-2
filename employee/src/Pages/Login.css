@@ -110,33 +110,45 @@ button[type="submit"] {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
-    overflow: hidden;
+    overflow: hidden; 
 }
 
-/* Hover background color change */
 button[type="submit"]:hover {
     background-color: #4338ca;
 }
 
-/* Lock icon before element */
 button[type="submit"]::before {
-    content: '🔒'; /* Lock icon */
+    content: '🔒'; 
     position: absolute;
     top: 50%;
-    left: 20px; /* Position the lock icon on the left */
+    left: 20px; 
     transform: translateY(-50%);
     font-size: 1.2rem;
     transition: transform 0.3s ease, opacity 0.3s ease;
-    opacity: 1; /* Visible initially */
+    opacity: 1; 
 }
 
-/* Unlock animation on hover */
 button[type="submit"]:hover::before {
-    content: '🔓'; /* Change lock icon to unlocked */
-    transform: translateY(-50%) translateX(10px); /* Slide to the right slightly */
+    content: '🔓'; 
+    transform: translateY(-50%) translateX(10px); 
     opacity: 1;
 }
 
+button[type="submit"] .ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    background-color: rgba(255, 255, 255, 0.6); 
+    pointer-events: none;
+    animation: ripple-animation 0.6s ease-out;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4); 
+        opacity: 0; 
+    }
+}
 @media (max-width: 500px) {
     .login-container {
         padding: 1.5rem;
