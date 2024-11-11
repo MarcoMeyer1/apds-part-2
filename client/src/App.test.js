@@ -1,6 +1,17 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import App from './App';
+
+// Mock window.alert
+global.alert = jest.fn();
+
+// Mock window.location.href
+Object.defineProperty(window, 'location', {
+  value: {
+    href: '',
+  },
+  writable: true,
+});
 
 describe('Client Portal - Login Component', () => {
   test('renders login form', () => {
@@ -14,7 +25,7 @@ describe('Client Portal - Login Component', () => {
     const usernameInput = screen.getByLabelText(/Username/i);
     expect(usernameInput).toBeInTheDocument();
 
-    // Check for account number input (updated label text)
+    // Check for account number input
     const accountNumberInput = screen.getByLabelText(/Account Number/i);
     expect(accountNumberInput).toBeInTheDocument();
 
@@ -28,7 +39,6 @@ describe('Client Portal - Login Component', () => {
   });
 
   test('displays error message on failed login', async () => {
-    // Mock fetch to simulate a failed login response
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: false,
@@ -38,27 +48,17 @@ describe('Client Portal - Login Component', () => {
 
     render(<App />);
 
-    // Fill in the form
-    fireEvent.change(screen.getByLabelText(/Username/i), {
-      target: { value: 'testuser' },
-    });
-    fireEvent.change(screen.getByLabelText(/Account Number/i), { // Updated label
-      target: { value: '12345' },
-    });
-    fireEvent.change(screen.getByLabelText(/Password/i), {
-      target: { value: 'password' },
-    });
+    fireEvent.change(screen.getByLabelText(/Username/i), { target: { value: 'testuser' } });
+    fireEvent.change(screen.getByLabelText(/Account Number/i), { target: { value: '12345' } });
+    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: 'password' } });
 
-    // Submit the form
     fireEvent.click(screen.getByRole('button', { name: /Login/i }));
 
-    // Wait for error message to display
     const errorMessage = await screen.findByText(/Login Failed/i);
     expect(errorMessage).toBeInTheDocument();
   });
 
   test('redirects to home after successful login', async () => {
-    // Mock fetch to simulate a successful login response
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
@@ -68,22 +68,16 @@ describe('Client Portal - Login Component', () => {
 
     render(<App />);
 
-    // Fill in the form
-    fireEvent.change(screen.getByLabelText(/Username/i), {
-      target: { value: 'testuser' },
-    });
-    fireEvent.change(screen.getByLabelText(/Account Number/i), { // Updated label
-      target: { value: '12345' },
-    });
-    fireEvent.change(screen.getByLabelText(/Password/i), {
-      target: { value: 'password' },
-    });
+    fireEvent.change(screen.getByLabelText(/Username/i), { target: { value: 'testuser' } });
+    fireEvent.change(screen.getByLabelText(/Account Number/i), { target: { value: '12345' } });
+    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: 'password' } });
 
-    // Submit the form
     fireEvent.click(screen.getByRole('button', { name: /Login/i }));
 
-    // Check that the homepage content is displayed after login
-    const homePageContent = await screen.findByText(/Welcome to the Homepage!/i);
-    expect(homePageContent).toBeInTheDocument();
+    // Wait for navigation to complete and check the homepage content
+    await waitFor(() => {
+      expect(global.alert).toHaveBeenCalledWith('Login Successful');
+      expect(window.location.href).toBe('/home');
+    });
   });
 });
