@@ -132,7 +132,7 @@ const VerifyTransactions = () => {
                                             <button 
                                                 onClick={() => handleVerify(transaction.ID, transaction.SWIFTCode)}
                                                 className="verify-button"
-                                                data-testid={`verify-button-${transaction.ID}`} // Added for testing
+                                                data-testid={`verify-button-${transaction.ID}`} 
                                             >
                                                 Verify
                                             </button>
@@ -172,7 +172,7 @@ const VerifyTransactions = () => {
                                             <button 
                                                 onClick={() => handleUnverify(transaction.ID)}
                                                 className="unverify-button"
-                                                data-testid={`unverify-button-${transaction.ID}`} // Added for testing
+                                                data-testid={`unverify-button-${transaction.ID}`} 
                                             >
                                                 Unverify
                                             </button>

@@ -427,7 +427,7 @@ const verifyPassword = (enteredPassword, storedHash, salt) => {
     return storedHash === enteredHash;
 };
 
-// Backend: Express login route for employees
+
 app.post('/employee-login', async (req, res) => {
     const { username, password, employeeNumber } = req.body;
 
@@ -463,7 +463,7 @@ app.post('/employee-login', async (req, res) => {
         // Set token as a secure cookie
         res.cookie('JWT-SESSION', token, {
             httpOnly: true,
-            secure: true, // Ensure this is true in production
+            secure: true, 
             sameSite: 'Lax',
             maxAge: 60 * 60 * 1000 // 1 hour
         });

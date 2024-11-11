@@ -5,7 +5,7 @@ import "./Login.css";
 
 const Login = () => {
     const [username, setUsername] = useState('');
-    const [employeeNumber, setEmployeeNumber] = useState(''); // renamed from accountNumber
+    const [employeeNumber, setEmployeeNumber] = useState(''); 
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [captchaVerified, setCaptchaVerified] = useState(false);
