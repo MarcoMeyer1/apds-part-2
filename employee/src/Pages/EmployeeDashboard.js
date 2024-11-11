@@ -16,7 +16,6 @@ const EmployeeDashboard = () => {
         manager: ''
     });
 
-
     const handleVerifyTransactions = () => {
         navigate('/verify-transactions');
     };
@@ -46,7 +45,6 @@ const EmployeeDashboard = () => {
         else if (hour < 18) return "Good Afternoon";
         else return "Good Evening";
     };
-
 
     useEffect(() => {
         const fetchEmployeeInfo = async () => {
@@ -78,35 +76,12 @@ const EmployeeDashboard = () => {
         fetchEmployeeInfo();
     }, []);
 
-
-
     return (
         <div className="dashboard-container">
-    {/*gradient banner */}
-    <div className="profile-banner"></div>
+            {/* Gradient banner */}
+            <div className="profile-banner"></div>
 
-    <div className="spacer"></div>
-
-    {/* Profile Card */}
-    <div className="profile-card">
-        <div className="profile-picture-container" onClick={triggerFileInput}>
-            <div className="profile-picture">
-            {profileImage ? (
-                            <img src={profileImage} alt="Profile" />
-                        ) : (
-                            <img src="/default-profile.png" alt="Default Profile" />
-                        )}
-            </div>
-            <input
-                id="file-upload"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden-file-input"
-            />
-        </div>
-
-
+            {/* Spacer */}
             <div className="spacer"></div>
 
             {/* Profile Card */}
@@ -116,7 +91,7 @@ const EmployeeDashboard = () => {
                         {profileImage ? (
                             <img src={profileImage} alt="Profile" />
                         ) : (
-                            <span>Profile Pic</span>
+                            <img src="/default-profile.png" alt="Default Profile" />
                         )}
                     </div>
                     <input
@@ -132,7 +107,7 @@ const EmployeeDashboard = () => {
                 <div className="profile-info">
                     <h2>{`${getGreeting()}, ${employeeInfo.fullName}`}</h2>
                     <p>{employeeInfo.email}</p>
-                    
+
                     <div className="profile-details">
                         <p><strong>Employee ID:</strong> {employeeInfo.employeeID}</p>
                         <p><strong>Position:</strong> {employeeInfo.position}</p>
