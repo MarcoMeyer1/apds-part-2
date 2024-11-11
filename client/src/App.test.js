@@ -1,44 +1,39 @@
+// Client Portal - App.test.js
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import Login from './pages/Login';
+import App from './App';
 
-describe('Login Component', () => {
+describe('Client Portal - Login Component', () => {
   test('renders login form', () => {
     render(
       <MemoryRouter>
-        <Login />
+        <App />
       </MemoryRouter>
     );
 
-    // Check for the "Login" heading
     const headingElement = screen.getByRole('heading', { name: /login/i });
     expect(headingElement).toBeInTheDocument();
 
-    // Check for the submit button specifically
-    const submitButton = screen.getByRole('button', { name: /login/i });
-    expect(submitButton).toBeInTheDocument();
-
-    // Check for username input
     const usernameInput = screen.getByLabelText(/Username/i);
     expect(usernameInput).toBeInTheDocument();
 
-    // Check for account number input
-    const accountNumberInput = screen.getByLabelText(/Account Number/i);
+    const accountNumberInput = screen.getByLabelText(/Employee Number/i);
     expect(accountNumberInput).toBeInTheDocument();
 
-    // Check for password input
     const passwordInput = screen.getByLabelText(/Password/i);
     expect(passwordInput).toBeInTheDocument();
+
+    const loginButton = screen.getByRole('button', { name: /Login/i });
+    expect(loginButton).toBeInTheDocument();
   });
 
   test('displays error message on failed login', async () => {
     render(
       <MemoryRouter>
-        <Login />
+        <App />
       </MemoryRouter>
     );
 
-    // Mock fetch to simulate a failed login response
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: false,
@@ -46,57 +41,49 @@ describe('Login Component', () => {
       })
     );
 
-    // Fill in the form
     fireEvent.change(screen.getByLabelText(/Username/i), {
       target: { value: 'testuser' },
     });
-    fireEvent.change(screen.getByLabelText(/Account Number/i), {
+    fireEvent.change(screen.getByLabelText(/Employee Number/i), {
       target: { value: '12345' },
     });
     fireEvent.change(screen.getByLabelText(/Password/i), {
       target: { value: 'password' },
     });
 
-    // Submit the form
     fireEvent.click(screen.getByRole('button', { name: /Login/i }));
 
-    // Wait for error message to display
     const errorMessage = await screen.findByText(/Login Failed/i);
     expect(errorMessage).toBeInTheDocument();
   });
 
-  test('displays App.js content after successful login', async () => {
-    // Mock fetch to simulate a successful login response
+  test('redirects to home after successful login', async () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({ role: 'Employee' }), // Adjust based on expected response
+        json: () => Promise.resolve({ role: 'User' }),
       })
     );
 
     render(
-      <MemoryRouter>
-        <Login />
+      <MemoryRouter initialEntries={['/login']}>
+        <App />
       </MemoryRouter>
     );
 
-    // Fill in the form
     fireEvent.change(screen.getByLabelText(/Username/i), {
       target: { value: 'testuser' },
     });
-    fireEvent.change(screen.getByLabelText(/Account Number/i), {
+    fireEvent.change(screen.getByLabelText(/Employee Number/i), {
       target: { value: '12345' },
     });
     fireEvent.change(screen.getByLabelText(/Password/i), {
       target: { value: 'password' },
     });
 
-    // Simulate form submission
     fireEvent.click(screen.getByRole('button', { name: /Login/i }));
 
-    // Check that the main content of App.js is displayed
-    // Adjust this selector based on unique text or element present in App.js
-    const mainAppContent = await screen.findByText(/Welcome to the App/i);  // Replace with text actually rendered in App.js
-    expect(mainAppContent).toBeInTheDocument();
+    const homePageContent = await screen.findByText(/Welcome to the Homepage!/i);
+    expect(homePageContent).toBeInTheDocument();
   });
 });
