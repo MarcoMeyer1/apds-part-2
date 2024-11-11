@@ -5,10 +5,10 @@ import "./Login.css";
 
 const Login = () => {
     const [username, setUsername] = useState('');
-    const [accountNumber, setAccountNumber] = useState('');
+    const [employeeNumber, setEmployeeNumber] = useState(''); // renamed from accountNumber
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [captchaVerified, setCaptchaVerified] = useState(false); 
+    const [captchaVerified, setCaptchaVerified] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -18,7 +18,7 @@ const Login = () => {
             setErrorMessage('Please complete the CAPTCHA before logging in.');
             return;
         }
-    
+
         try {
             const response = await fetch('https://localhost:5000/employee-login', {
                 method: 'POST',
@@ -26,14 +26,14 @@ const Login = () => {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify({ username, accountNumber, password }),
+                body: JSON.stringify({ username, employeeNumber, password }),
             });
-    
+
             if (response.ok) {
                 const data = await response.json();
                 alert('Login Successful');
                 if (data.role === 'Employee') {
-                    localStorage.setItem('username', data.username); 
+                    localStorage.setItem('username', username); 
                     window.location.href = '/employee-dashboard';
                 }
             } else {
@@ -63,11 +63,11 @@ const Login = () => {
         ripple.classList.add("ripple");
 
         const rect = button.getBoundingClientRect();
-        const rippleSize= Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - rippleSize /2;
-        const y = e.clientY - rect.top - rippleSize /2;
+        const rippleSize = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - rippleSize / 2;
+        const y = e.clientY - rect.top - rippleSize / 2;
 
-        ripple.style.width = ripple.style.height =  `${rippleSize}px`;
+        ripple.style.width = ripple.style.height = `${rippleSize}px`;
         ripple.style.left = `${x}px`;
         ripple.style.top = `${y}px`;
 
@@ -75,15 +75,13 @@ const Login = () => {
 
         ripple.addEventListener("animationend", () => {
             ripple.remove();
-        })
-    }
+        });
+    };
 
     return (
         <div className="login-page">
-            {/* Gradient Background */}
             <div className="gradient-background"></div>
 
-            {/* Login Form */}
             <div className="login-container">
                 <form className="login-form" onSubmit={handleSubmit}>
                     <h2>Login</h2>
@@ -105,8 +103,8 @@ const Login = () => {
                         <input 
                             id="employeeNumber"
                             type="text" 
-                            value={accountNumber} 
-                            onChange={(e) => setAccountNumber(e.target.value)} 
+                            value={employeeNumber} 
+                            onChange={(e) => setEmployeeNumber(e.target.value)} 
                             required 
                         />
                     </div>
@@ -132,7 +130,6 @@ const Login = () => {
                        <span className="ripple"></span>
                        <span>Login</span>
                     </button>
-
                 </form>
             </div>
         </div>

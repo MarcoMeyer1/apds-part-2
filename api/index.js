@@ -427,21 +427,26 @@ const verifyPassword = (enteredPassword, storedHash, salt) => {
     return storedHash === enteredHash;
 };
 
+// Backend: Express login route for employees
 app.post('/employee-login', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, employeeNumber } = req.body;
 
     try {
         // Ensure a valid connection
         const pool = await sql.connect(dbConfig);
 
-        // Query the employee by username
+        // Query the employee by username and employee number
         const request = pool.request();
         request.input('username', sql.VarChar, username);
-        const result = await request.query(`SELECT * FROM Employees WHERE Username = @username`);
+        request.input('employeeNumber', sql.Int, employeeNumber);
+        const result = await request.query(`
+            SELECT * FROM Employees 
+            WHERE Username = @username AND EmployeeID = @employeeNumber
+        `);
 
         // Check if user exists
         if (result.recordset.length === 0) {
-            return res.status(401).send('Invalid username or password.');
+            return res.status(401).send('Invalid username, password, or employee number.');
         }
 
         const employee = result.recordset[0];
@@ -449,12 +454,12 @@ app.post('/employee-login', async (req, res) => {
 
         // Verify password
         if (!verifyPassword(password, PasswordHash, Salt)) {
-            return res.status(401).send('Invalid username or password.');
+            return res.status(401).send('Invalid username, password, or employee number.');
         }
 
         // Generate JWT token
         const token = jwt.sign({ id: employee.ID, role: Role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        
+
         // Set token as a secure cookie
         res.cookie('JWT-SESSION', token, {
             httpOnly: true,
@@ -470,6 +475,7 @@ app.post('/employee-login', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
 
 
 app.get('/api/employee/profile', async (req, res) => {
