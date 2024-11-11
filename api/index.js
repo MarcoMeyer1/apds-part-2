@@ -404,14 +404,22 @@ function generateSalt() {
 }
 
 function hashPassword(password, salt) {
-    const hashes = [
-        crypto.createHmac('sha256', salt).update(password).digest('hex'),
-        crypto.createHmac('sha512', salt).update(password).digest('hex'),
-        crypto.createHmac('sha1', salt).update(password).digest('hex'),
-        crypto.createHmac('md5', salt).update(password).digest('hex'),
-        crypto.createHmac('ripemd160', salt).update(password).digest('hex'),
-    ];
-    return hashes.join('|'); // Combining hashes with a separator
+    
+    const iterations = 5; 
+    let hash = password;
+
+    // Loop to apply multiple rounds of hashing
+    for (let i = 0; i < iterations; i++) {
+        hash = [
+            crypto.createHmac('sha256', salt).update(hash).digest('hex'),
+            crypto.createHmac('sha512', salt).update(hash).digest('hex'),
+            crypto.createHmac('sha1', salt).update(hash).digest('hex'),
+            crypto.createHmac('md5', salt).update(hash).digest('hex'),
+            crypto.createHmac('ripemd160', salt).update(hash).digest('hex'),
+        ].join('|');
+    }
+
+    return hash;
 }
 
 const verifyPassword = (enteredPassword, storedHash, salt) => {
@@ -464,8 +472,32 @@ app.post('/employee-login', async (req, res) => {
 });
 
 
+app.get('/api/employee/profile', async (req, res) => {
+    const token = req.cookies['JWT-SESSION'];
 
+    if (!token) {
+        return res.status(401).send('Authorization token is missing');
+    }
 
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const employeeID = decoded.id;
+
+        const query = `SELECT FullName, Username, Email, EmployeeID, Position, Department, Manager FROM Employees WHERE ID = @employeeID`;
+        const request = new sql.Request();
+        request.input('employeeID', sql.Int, employeeID);
+        const result = await request.query(query);
+
+        if (result.recordset.length === 0) {
+            return res.status(404).send('Employee not found');
+        }
+
+        res.status(200).json(result.recordset[0]);
+    } catch (err) {
+        console.error('Error fetching employee profile:', err);
+        res.status(500).send('Failed to fetch employee profile');
+    }
+});
 
 
 const server = https.createServer(options, app);

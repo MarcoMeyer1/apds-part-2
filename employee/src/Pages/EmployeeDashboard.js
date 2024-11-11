@@ -1,11 +1,19 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './EmployeeDashboard.css';
 
 const EmployeeDashboard = () => {
     const navigate = useNavigate();
     const [profileImage, setProfileImage] = useState(null);
-    const [username, setUsername] = useState('');
+    const [employeeInfo, setEmployeeInfo] = useState({
+        fullName: '',
+        username: '',
+        email: '',
+        employeeID: '',
+        position: '',
+        department: '',
+        manager: ''
+    });
 
     const handleVerifyTransactions = () => {
         navigate('/verify-transactions');
@@ -38,60 +46,83 @@ const EmployeeDashboard = () => {
     };
 
     useEffect(() => {
-        const storedUsername = localStorage.getItem('username');
-        if (storedUsername) {
-            setUsername(storedUsername);
-        }
+        const fetchEmployeeInfo = async () => {
+            try {
+                const response = await fetch('https://localhost:5000/api/employee/profile', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch employee information');
+                }
+
+                const data = await response.json();
+                setEmployeeInfo({
+                    fullName: data.FullName,
+                    username: data.Username,
+                    email: data.Email,
+                    employeeID: data.EmployeeID,
+                    position: data.Position,
+                    department: data.Department,
+                    manager: data.Manager
+                });
+            } catch (error) {
+                console.error("Error fetching employee information:", error);
+            }
+        };
+
+        fetchEmployeeInfo();
     }, []);
 
     return (
         <div className="dashboard-container">
-    {/*gradient banner */}
-    <div className="profile-banner"></div>
+            {/*gradient banner */}
+            <div className="profile-banner"></div>
 
-    <div className="spacer"></div>
+            <div className="spacer"></div>
 
-    {/* Profile Card */}
-    <div className="profile-card">
-        <div className="profile-picture-container" onClick={triggerFileInput}>
-            <div className="profile-picture">
-                {profileImage ? (
-                    <img src={profileImage} alt="Profile" />
-                ) : (
-                    <span>Profile Pic</span>
-                )}
+            {/* Profile Card */}
+            <div className="profile-card">
+                <div className="profile-picture-container" onClick={triggerFileInput}>
+                    <div className="profile-picture">
+                        {profileImage ? (
+                            <img src={profileImage} alt="Profile" />
+                        ) : (
+                            <span>Profile Pic</span>
+                        )}
+                    </div>
+                    <input
+                        id="file-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden-file-input"
+                    />
+                </div>
+
+                {/* Profile Information */}
+                <div className="profile-info">
+                    <h2>{`${getGreeting()}, ${employeeInfo.fullName}`}</h2>
+                    <p>{employeeInfo.email}</p>
+                    
+                    <div className="profile-details">
+                        <p><strong>Employee ID:</strong> {employeeInfo.employeeID}</p>
+                        <p><strong>Position:</strong> {employeeInfo.position}</p>
+                        <p><strong>Department:</strong> {employeeInfo.department}</p>
+                        <p><strong>Manager:</strong> {employeeInfo.manager}</p>
+                    </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="button-container">
+                    <button onClick={handleVerifyTransactions} className="action-button">
+                        Verify Transactions
+                    </button>
+                </div>
             </div>
-            <input
-                id="file-upload"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden-file-input"
-            />
         </div>
-
-        {/* Profile Information */}
-        <div className="profile-info">
-        <h2>{`${getGreeting()}, John Doe`}</h2>
-            <p>johndoe@example.com</p>
-            
-            <div className="profile-details">
-              <p><strong>Employee ID:</strong> 12345</p>
-              <p><strong>Position:</strong> Specialist</p>
-              <p><strong>Department:</strong> Finance</p>
-              <p><strong>Manager:</strong> Jane Smith</p>
-            </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="button-container">
-            <button onClick={handleVerifyTransactions} className="action-button">
-                Verify Transactions
-            </button>
-        </div>
-    </div>
-</div>
     );
 };
 
-export default EmployeeDashboard; 
+export default EmployeeDashboard;
