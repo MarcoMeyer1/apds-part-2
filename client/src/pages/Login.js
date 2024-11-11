@@ -25,7 +25,7 @@ const Login = () => {
             if (response.ok) {
                 const data = await response.json();
 
-                //Store role in localStorage
+                // Store role in localStorage
                 localStorage.setItem('role', data.role);
 
                 // Notify user of successful login
@@ -57,8 +57,9 @@ const Login = () => {
                 {errorMessage && <div className="error-message">{errorMessage}</div>}
 
                 <div className="form-group">
-                    <label>Username</label>
+                    <label htmlFor="username">Username</label>
                     <input 
+                        id="username"
                         type="text" 
                         value={username} 
                         onChange={(e) => setUsername(e.target.value)} 
@@ -66,8 +67,9 @@ const Login = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>Account Number</label>
+                    <label htmlFor="accountNumber">Account Number</label>
                     <input 
+                        id="accountNumber"
                         type="text" 
                         value={accountNumber} 
                         onChange={(e) => setAccountNumber(e.target.value)} 
@@ -75,8 +77,9 @@ const Login = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>Password</label>
+                    <label htmlFor="password">Password</label>
                     <input 
+                        id="password"
                         type="password" 
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)} 

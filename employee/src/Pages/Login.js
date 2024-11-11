@@ -62,8 +62,9 @@ const Login = () => {
                     {errorMessage && <div className="error-message">{errorMessage}</div>}
 
                     <div className="form-group">
-                        <label>Username</label>
+                        <label htmlFor="username">Username</label>
                         <input 
+                            id="username"
                             type="text" 
                             value={username} 
                             onChange={(e) => setUsername(e.target.value)} 
@@ -71,8 +72,9 @@ const Login = () => {
                         />
                     </div>
                     <div className="form-group">
-                        <label>Employee Number</label>
+                        <label htmlFor="accountNumber">Employee Number</label>
                         <input 
+                            id="accountNumber"
                             type="text" 
                             value={accountNumber} 
                             onChange={(e) => setAccountNumber(e.target.value)} 
@@ -80,8 +82,9 @@ const Login = () => {
                         />
                     </div>
                     <div className="form-group">
-                        <label>Password</label>
+                        <label htmlFor="password">Password</label>
                         <input 
+                            id="password"
                             type="password" 
                             value={password} 
                             onChange={(e) => setPassword(e.target.value)} 
@@ -97,6 +100,10 @@ const Login = () => {
                     </div>
 
                     <button type="submit" disabled={!captchaVerified}>Login</button>
+
+                    <div className="form-group">
+                        <p>Don't have an account? <Link to="/register">Register here!</Link></p>
+                    </div>
                 </form>
             </div>
         </div>

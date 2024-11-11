@@ -10,9 +10,13 @@ describe('Login Component', () => {
       </MemoryRouter>
     );
 
-    // Check for "Login" heading
-    const headingElement = screen.getByText(/Login/i);
+    // Check for the "Login" heading
+    const headingElement = screen.getByRole('heading', { name: /login/i });
     expect(headingElement).toBeInTheDocument();
+
+    // Check for the submit button specifically
+    const submitButton = screen.getByRole('button', { name: /login/i });
+    expect(submitButton).toBeInTheDocument();
 
     // Check for username input
     const usernameInput = screen.getByLabelText(/Username/i);
@@ -25,10 +29,6 @@ describe('Login Component', () => {
     // Check for password input
     const passwordInput = screen.getByLabelText(/Password/i);
     expect(passwordInput).toBeInTheDocument();
-
-    // Check for submit button
-    const submitButton = screen.getByRole('button', { name: /Login/i });
-    expect(submitButton).toBeInTheDocument();
   });
 
   test('displays error message on failed login', async () => {
