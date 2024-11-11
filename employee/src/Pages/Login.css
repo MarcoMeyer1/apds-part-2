@@ -159,9 +159,68 @@ button[type="submit"] .ripple {
         opacity: 0; 
     }
 }
-@media (max-width: 500px) {
+
+@media (max-width: 768px) {
     .login-container {
         padding: 1.5rem;
         margin: 1rem;
+        max-width: 90%;
+    }
+
+    .login-form h2 {
+        font-size: 1.5rem;
+    }
+
+    .form-group label {
+        font-size: 0.85rem;
+    }
+
+    .form-group input {
+        padding: 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    button[type="submit"] {
+        padding: 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    .error-message {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .login-container {
+        padding: 1rem;
+        margin: 0.5rem;
+        max-width: 95%;
+    }
+
+    .form-group input {
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+
+    button[type="submit"] {
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+
+    .form-group label {
+        font-size: 0.8rem;
+    }
+
+    .login-form h2 {
+        font-size: 1.4rem;
+    }
+
+    .button-container {
+        margin-top: 1rem;
+    }
+
+    button[type="submit"]::before {
+        left: 10px; 
+        font-size: 1rem;
     }
 }

@@ -31,6 +31,7 @@
     animation: gradientShift 35s ease-in-out infinite;
 }
 
+
 @keyframes gradientShift {
     0% {
         background-position: 0% 50%;
@@ -146,3 +147,69 @@
     background-color: #4338ca;
 }
 
+@media (max-width: 768px) {
+    .profile-card {
+        width: 95%;
+        padding: 30px 20px 20px;
+    }
+
+    .profile-picture {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-info h2 {
+        font-size: 20px;
+    }
+
+    .profile-info p {
+        font-size: 14px;
+    }
+
+    .profile-details p {
+        font-size: 14px;
+    }
+
+    .button-container {
+        gap: 10px;
+    }
+
+    .action-button {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-card {
+        width: 100%;
+        padding: 20px;
+        margin-top: 15px;
+    }
+
+    .profile-picture {
+        width: 80px;
+        height: 80px;
+    }
+
+    .profile-info h2 {
+        font-size: 18px;
+    }
+
+    .profile-details p {
+        font-size: 13px;
+        text-align: center;
+    }
+
+    .button-container {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .action-button {
+        width: 100%;
+        padding: 8px;
+        font-size: 12px;
+    }
+}

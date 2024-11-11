@@ -146,10 +146,11 @@ const VerifyTransactions = () => {
     </div>
 
     <div className="transactions-column">
-        <h3>Verified Transactions</h3>
-        {verifiedTransactions.length === 0 ? (
-            <p>No verified transactions to display.</p>
-        ) : (
+    <h3>Pending Verification</h3>
+    {pendingTransactions.length === 0 ? (
+        <p>No pending transactions to display.</p>
+    ) : (
+        <div className="table-container">
             <table>
                 <thead>
                     <tr>
@@ -162,7 +163,7 @@ const VerifyTransactions = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {verifiedTransactions.map((transaction) => (
+                    {pendingTransactions.map((transaction) => (
                         <tr key={transaction.ID}>
                             <td>{transaction.Amount}</td>
                             <td>{transaction.Currency}</td>
@@ -171,18 +172,19 @@ const VerifyTransactions = () => {
                             <td>{new Date(transaction.CreatedAt).toLocaleDateString()}</td>
                             <td>
                                 <button 
-                                    onClick={() => handleUnverify(transaction.ID)}
-                                    className="unverify-button"
+                                    onClick={() => handleVerify(transaction.ID, transaction.SWIFTCode)}
+                                    className="verify-button"
                                 >
-                                    Unverify
+                                    Verify
                                 </button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-        )}
-    </div>
+        </div>
+    )}
+</div>
 </div>
 </div>
     );
