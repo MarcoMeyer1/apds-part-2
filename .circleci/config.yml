@@ -8,7 +8,7 @@ jobs:
     steps:
       - checkout  # Checkout your code from the repo
 
-      # Cache node_modules to speed up subsequent buildz
+      # Cache node_modules to speed up subsequent builds
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "client/package.json" }}
@@ -20,11 +20,14 @@ jobs:
           command: |
             cd client
             npm install
+            cd ../employee
+            npm install
 
       # Save node_modules cache
       - save_cache:
           paths:
             - client/node_modules
+            - employee/node_modules
           key: v1-dependencies-{{ checksum "client/package.json" }}
 
       # Install SonarScanner locally
@@ -32,6 +35,8 @@ jobs:
           name: Install SonarScanner Locally
           command: |
             cd client
+            npm install sonarqube-scanner
+            cd ../employee
             npm install sonarqube-scanner
 
       # Run SonarQube Scan using SonarCloud with updated syntax
@@ -42,10 +47,20 @@ jobs:
             npx sonar-scanner \
               -Dsonar.projectKey=MarcoMeyer1_apds-part-2 \
               -Dsonar.organization=marcomeyer1 \
-              -Dsonar.sources=. \
+              -Dsonar.sources=.,../employee \
               -Dsonar.host.url=https://sonarcloud.io \
               -Dsonar.token=7f7c83654f1053d075406d09d3b2eae89326822d \
+              -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
               -X
+
+      # Run tests and generate coverage report
+      - run:
+          name: Run Tests and Generate Coverage Report
+          command: |
+            cd client
+            npm run test -- --coverage
+            cd ../employee
+            npm run test -- --coverage
 
 workflows:
   build-and-test-workflow:
