@@ -10,7 +10,7 @@ jobs:
 
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "client/package.json" }}
+            - v1-dependencies-{{ checksum "client/package.json" }}-{{ checksum "employee/package.json" }}
             - v1-dependencies-
 
       # Install dependencies for client and employee projects
@@ -24,7 +24,21 @@ jobs:
           paths:
             - client/node_modules
             - employee/node_modules
-          key: v1-dependencies-{{ checksum "client/package.json" }}
+          key: v1-dependencies-{{ checksum "client/package.json" }}-{{ checksum "employee/package.json" }}
+
+      # Run tests in client project
+      - run:
+          name: Run Client Tests
+          command: |
+            cd client
+            npm test -- --ci --coverage
+
+      # Run tests in employee project
+      - run:
+          name: Run Employee Tests
+          command: |
+            cd employee
+            npm test -- --ci --coverage
 
   sonarcloud-scan:
     docker:
@@ -33,13 +47,19 @@ jobs:
     steps:
       - checkout
 
+      # Install dependencies needed for the scan
+      - run:
+          name: Install Scanner Dependencies
+          command: |
+            cd client && npm install
+            cd ../employee && npm install
+
       - run:
           name: Run SonarCloud Scan
           command: |
             sonar-scanner \
               -Dsonar.projectKey=MarcoMeyer1_apds-part-2 \
               -Dsonar.organization=marcomeyer1 \
-              -Dsonar.sources=client,employee \
               -Dsonar.host.url=https://sonarcloud.io \
               -Dsonar.token=$SONAR_TOKEN \
               -X
@@ -48,5 +68,6 @@ workflows:
   build-and-test-workflow:
     jobs:
       - build-and-test
-      - sonarcloud-scan
-
+      - sonarcloud-scan:
+          requires:
+            - build-and-test

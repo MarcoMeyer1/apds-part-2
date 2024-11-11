@@ -91,8 +91,9 @@ const Login = () => {
                     {errorMessage && <div className="error-message">{errorMessage}</div>}
 
                     <div className="form-group">
-                        <label>Username</label>
+                        <label htmlFor="username">Username</label>
                         <input 
+                            id="username"
                             type="text" 
                             value={username} 
                             onChange={(e) => setUsername(e.target.value)} 
@@ -100,8 +101,9 @@ const Login = () => {
                         />
                     </div>
                     <div className="form-group">
-                        <label>Employee Number</label>
+                        <label htmlFor="employeeNumber">Employee Number</label>
                         <input 
+                            id="employeeNumber"
                             type="text" 
                             value={accountNumber} 
                             onChange={(e) => setAccountNumber(e.target.value)} 
@@ -109,8 +111,9 @@ const Login = () => {
                         />
                     </div>
                     <div className="form-group">
-                        <label>Password</label>
+                        <label htmlFor="password">Password</label>
                         <input 
+                            id="password"
                             type="password" 
                             value={password} 
                             onChange={(e) => setPassword(e.target.value)} 
@@ -120,13 +123,13 @@ const Login = () => {
 
                     <div className="form-group">
                         <ReCAPTCHA
-                            sitekey="6LfxHHoqAAAAAF8x9aq_SRF1R2DZi7qfztobKRXc"
+                            sitekey="your-site-key"
                             onChange={handleCaptchaChange}
                         />
                     </div>
 
                     <button type="submit" disabled={!captchaVerified} onClick={handleButtonClick}>
-                       <span classname="ripple"></span>
+                       <span className="ripple"></span>
                        <span>Login</span>
                     </button>
 

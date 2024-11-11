@@ -44,8 +44,9 @@ const Payment = () => {
                 {errorMessage && <div className="error-message">{errorMessage}</div>}
 
                 <div className="form-group">
-                    <label>Amount</label>
+                    <label htmlFor="amount">Amount</label>
                     <input 
+                        id="amount"
                         type="number" 
                         value={amount} 
                         onChange={(e) => setAmount(e.target.value)} 
@@ -53,8 +54,9 @@ const Payment = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>Currency</label>
+                    <label htmlFor="currency">Currency</label>
                     <input 
+                        id="currency"
                         type="text" 
                         value={currency} 
                         onChange={(e) => setCurrency(e.target.value)} 
@@ -62,8 +64,9 @@ const Payment = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>Provider</label>
+                    <label htmlFor="provider">Provider</label>
                     <input 
+                        id="provider"
                         type="text" 
                         value={provider} 
                         onChange={(e) => setProvider(e.target.value)} 
@@ -71,8 +74,9 @@ const Payment = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>SWIFT Code</label>
+                    <label htmlFor="swiftCode">SWIFT Code</label>
                     <input 
+                        id="swiftCode"
                         type="text" 
                         value={swiftCode} 
                         onChange={(e) => setSwiftCode(e.target.value.toUpperCase())} 
