@@ -33,7 +33,7 @@ const Login = () => {
 
                 // Redirect based on user role
                 if (data.role === 'Employee') {
-                    window.location.href = '/employee-dashboard';
+                    
                 } else {
                     window.location.href = '/home';
                 }
