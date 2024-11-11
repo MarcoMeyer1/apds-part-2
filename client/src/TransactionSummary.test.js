@@ -1,4 +1,3 @@
-// src/pages/TransactionSummary.test.js
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import TransactionSummary from './pages/TransactionSummary';
