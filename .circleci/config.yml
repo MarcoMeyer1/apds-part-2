@@ -26,18 +26,17 @@ jobs:
             - employee/node_modules
           key: v1-dependencies-{{ checksum "client/package.json" }}
 
-      # Install SonarQube Scanner locally in each directory
-      - run:
-          name: Install SonarScanner Locally
-          command: |
-            cd client && npm install sonarqube-scanner
-            cd ../employee && npm install sonarqube-scanner
+  sonarcloud-scan:
+    docker:
+      - image: sonarsource/sonar-scanner-cli:latest
 
-      # Run SonarQube Scan from the root directory to include both client and employee
+    steps:
+      - checkout
+
       - run:
           name: Run SonarCloud Scan
           command: |
-            npx sonar-scanner \
+            sonar-scanner \
               -Dsonar.projectKey=MarcoMeyer1_apds-part-2 \
               -Dsonar.organization=marcomeyer1 \
               -Dsonar.sources=client,employee \
@@ -49,3 +48,5 @@ workflows:
   build-and-test-workflow:
     jobs:
       - build-and-test
+      - sonarcloud-scan
+
