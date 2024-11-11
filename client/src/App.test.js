@@ -52,11 +52,8 @@ describe('Client Portal - Login Component', () => {
             })
         );
 
-        render(
-            <Router>
-                <App />
-            </Router>
-        );
+        // Render the <App /> component without an additional <Router> wrapper
+        render(<App />);
 
         fireEvent.change(screen.getByLabelText(/Username/i), { target: { value: 'correctuser' } });
         fireEvent.change(screen.getByLabelText(/Account Number/i), { target: { value: '12345' } });
