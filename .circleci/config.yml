@@ -3,12 +3,11 @@ version: 2.1
 jobs:
   build-and-test:
     docker:
-      - image: cimg/node:14.18  # Updated next-gen Docker image for Node.js 14.18
+      - image: cimg/node:14.18
 
     steps:
-      - checkout  # Checkout your code from the repo
+      - checkout
 
-      # Cache node_modules to speed up subsequent builds
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "client/package.json" }}
@@ -18,39 +17,33 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
-            cd client
-            npm install
-            cd ../employee
-            npm install
+            cd client && npm install
+            cd ../employee && npm install
 
-      # Save node_modules cache
       - save_cache:
           paths:
             - client/node_modules
             - employee/node_modules
           key: v1-dependencies-{{ checksum "client/package.json" }}
 
-      # Install SonarScanner locally in each project directory if necessary
+      # Install SonarQube Scanner locally in each directory
       - run:
           name: Install SonarScanner Locally
           command: |
-            cd client
-            npm install sonarqube-scanner
-            cd ../employee
-            npm install sonarqube-scanner
+            cd client && npm install sonarqube-scanner
+            cd ../employee && npm install sonarqube-scanner
 
-          # Run SonarQube Scan from the root level
+      # Run SonarQube Scan from the root directory to include both client and employee
       - run:
           name: Run SonarCloud Scan
           command: |
             npx sonar-scanner \
               -Dsonar.projectKey=MarcoMeyer1_apds-part-2 \
               -Dsonar.organization=marcomeyer1 \
-              -Dsonar.sources=. \
+              -Dsonar.sources=client,employee \
               -Dsonar.host.url=https://sonarcloud.io \
               -Dsonar.token=$SONAR_TOKEN \
               -X
-
 
 workflows:
   build-and-test-workflow:
