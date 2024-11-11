@@ -20,10 +20,6 @@ const EmployeeDashboard = () => {
         navigate('/verify-transactions');
     };
 
-    const handleManageTransactions = () => {
-        navigate('/manage-transactions');
-    };
-
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -77,65 +73,65 @@ const EmployeeDashboard = () => {
     }, []);
 
     return (
-        <div className="dashboard-container">
-            {/* Gradient banner */}
-            <div className="profile-banner"></div>
+        <>
+            <div className="dashboard-container">
+                {/* Gradient banner */}
+                <div className="profile-banner"></div>
 
-            {/* Spacer */}
-            <div className="spacer"></div>
+                {/* Spacer */}
+                <div className="spacer"></div>
 
-            {/* Profile Card */}
-<div className="profile-card">
-  <div
-    className="profile-picture-container"
-    onClick={triggerFileInput}
-    role="button"
-    tabIndex="0"
-    onKeyDown={(e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        triggerFileInput();
-      }
-    }}
-  >
-    <div className="profile-picture">
-      {profileImage ? (
-        <img src={profileImage} alt="Profile" />
-      ) : (
-        <img src="/default-profile.png" alt="Default Profile" />
-      )}
-    </div>
-  </div>
-  <input
-    id="file-upload"
-    type="file"
-    accept="image/*"
-    onChange={handleImageUpload}
-    className="hidden-file-input"
-  />
-</div>
+                {/* Profile Card */}
+                <div className="profile-card">
+                    <div
+                        className="profile-picture-container"
+                        onClick={triggerFileInput}
+                        role="button"
+                        tabIndex="0"
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                triggerFileInput();
+                            }
+                        }}
+                    >
+                        <div className="profile-picture">
+                            {profileImage ? (
+                                <img src={profileImage} alt="Profile" />
+                            ) : (
+                                <img src="/default-profile.png" alt="Default Profile" />
+                            )}
+                        </div>
+                    </div>
+                    <input
+                        id="file-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden-file-input"
+                    />
 
+                    {/* Profile Information */}
+                    <div className="profile-info">
+                        <h2>{`${getGreeting()}, ${employeeInfo.fullName}`}</h2>
+                        <p>{employeeInfo.email}</p>
 
-                {/* Profile Information */}
-                <div className="profile-info">
-                    <h2>{`${getGreeting()}, ${employeeInfo.fullName}`}</h2>
-                    <p>{employeeInfo.email}</p>
+                        <div className="profile-details">
+                            <p><strong>Employee ID:</strong> {employeeInfo.employeeID}</p>
+                            <p><strong>Position:</strong> {employeeInfo.position}</p>
+                            <p><strong>Department:</strong> {employeeInfo.department}</p>
+                            <p><strong>Manager:</strong> {employeeInfo.manager}</p>
+                        </div>
+                    </div>
 
-                    <div className="profile-details">
-                        <p><strong>Employee ID:</strong> {employeeInfo.employeeID}</p>
-                        <p><strong>Position:</strong> {employeeInfo.position}</p>
-                        <p><strong>Department:</strong> {employeeInfo.department}</p>
-                        <p><strong>Manager:</strong> {employeeInfo.manager}</p>
+                    {/* Action Buttons */}
+                    <div className="button-container">
+                        <button onClick={handleVerifyTransactions} className="action-button">
+                            Verify Transactions
+                        </button>
                     </div>
                 </div>
-
-                {/* Action Buttons */}
-                <div className="button-container">
-                    <button onClick={handleVerifyTransactions} className="action-button">
-                        Verify Transactions
-                    </button>
-                </div>
             </div>
-        </div>
+        </>
     );
 };
 
