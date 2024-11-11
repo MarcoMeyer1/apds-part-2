@@ -37,7 +37,7 @@ jobs:
       - run:
           name: Run Employee Tests
           command: |
-            cd ../employee
+            cd employee
             npm test -- --ci --coverage
 
   sonarcloud-scan:
