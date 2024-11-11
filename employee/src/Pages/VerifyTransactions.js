@@ -101,90 +101,90 @@ const VerifyTransactions = () => {
                 </div>
             )}
 
-            <div className="verify-transactions-container">
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+<div className="verify-transactions-container">
+    {error && <p style={{ color: 'red' }}>{error}</p>}
 
-                <div className="transactions-column">
-                    <h3>Pending Verification</h3>
-                    {pendingTransactions.length === 0 ? (
-                        <p>No pending transactions to display.</p>
-                    ) : (
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Amount</th>
-                                    <th>Currency</th>
-                                    <th>Provider</th>
-                                    <th>SWIFT Code</th>
-                                    <th>Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {pendingTransactions.map((transaction) => (
-                                    <tr key={transaction.ID}>
-                                        <td>{transaction.Amount}</td>
-                                        <td>{transaction.Currency}</td>
-                                        <td>{transaction.Provider}</td>
-                                        <td>{transaction.SWIFTCode}</td>
-                                        <td>{new Date(transaction.CreatedAt).toLocaleDateString()}</td>
-                                        <td>
-                                            <button 
-                                                onClick={() => handleVerify(transaction.ID, transaction.SWIFTCode)}
-                                                className="verify-button"
-                                                data-testid={`verify-button-${transaction.ID}`} 
-                                            >
-                                                Verify
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
-                </div>
-
-                <div className="transactions-column">
-                    <h3>Verified Transactions</h3>
-                    {verifiedTransactions.length === 0 ? (
-                        <p>No verified transactions to display.</p>
-                    ) : (
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Amount</th>
-                                    <th>Currency</th>
-                                    <th>Provider</th>
-                                    <th>SWIFT Code</th>
-                                    <th>Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {verifiedTransactions.map((transaction) => (
-                                    <tr key={transaction.ID}>
-                                        <td>{transaction.Amount}</td>
-                                        <td>{transaction.Currency}</td>
-                                        <td>{transaction.Provider}</td>
-                                        <td>{transaction.SWIFTCode}</td>
-                                        <td>{new Date(transaction.CreatedAt).toLocaleDateString()}</td>
-                                        <td>
-                                            <button 
-                                                onClick={() => handleUnverify(transaction.ID)}
-                                                className="unverify-button"
-                                                data-testid={`unverify-button-${transaction.ID}`} 
-                                            >
-                                                Unverify
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
-                </div>
+    {pendingTransactions.length > 0 && (
+        <div className="transactions-column">
+            <h3>Pending Verification</h3>
+            <div className="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Amount</th>
+                            <th>Currency</th>
+                            <th>Provider</th>
+                            <th>SWIFT Code</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {pendingTransactions.map((transaction) => (
+                            <tr key={transaction.ID}>
+                                <td>{transaction.Amount}</td>
+                                <td>{transaction.Currency}</td>
+                                <td>{transaction.Provider}</td>
+                                <td>{transaction.SWIFTCode}</td>
+                                <td>{new Date(transaction.CreatedAt).toLocaleDateString()}</td>
+                                <td>
+                                    <button 
+                                        onClick={() => handleVerify(transaction.ID, transaction.SWIFTCode)}
+                                        className="verify-button"
+                                        data-testid={`verify-button-${transaction.ID}`} 
+                                    >
+                                        Verify
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
         </div>
+    )}
+
+    {verifiedTransactions.length > 0 && (
+        <div className="transactions-column">
+            <h3>Verified Transactions</h3>
+            <div className="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Amount</th>
+                            <th>Currency</th>
+                            <th>Provider</th>
+                            <th>SWIFT Code</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {verifiedTransactions.map((transaction) => (
+                            <tr key={transaction.ID}>
+                                <td>{transaction.Amount}</td>
+                                <td>{transaction.Currency}</td>
+                                <td>{transaction.Provider}</td>
+                                <td>{transaction.SWIFTCode}</td>
+                                <td>{new Date(transaction.CreatedAt).toLocaleDateString()}</td>
+                                <td>
+                                    <button 
+                                        onClick={() => handleUnverify(transaction.ID)}
+                                        className="unverify-button"
+                                        data-testid={`unverify-button-${transaction.ID}`} 
+                                    >
+                                        Unverify
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )}
+</div>
+</div>
     );
 };
 
