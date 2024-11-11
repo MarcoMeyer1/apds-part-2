@@ -97,6 +97,16 @@ The SonarScanner is configured in the CircleCI pipeline to scan the codebase for
 
 ---
 
+## Release Notes
+
+### Latest Updates
+
+- **Employee Portal Creation**: Introduced a new employee portal to enhance internal operations and streamline administrative tasks.
+- **Unit Tests Implementation**: Set up comprehensive unit tests for both the client and the employee portal to ensure reliability and catch issues early.
+- **Transaction Verification Features**: Pre-configured employees can now verify and un-verify transactions, adding an extra layer of control and security.
+- **Enhanced UI/UX**: Added animated backgrounds and extensive styling across all pages for a more engaging and dynamic user experience.
+
+
 ## License
 
 This project is licensed under the MIT License.
