@@ -55,14 +55,14 @@ jobs:
             cd ../employee && npm install
 
       - run:
-          name: Run SonarCloud Scan
+         name: Run SonarCloud Scan
           command: |
             sonar-scanner \
               -Dsonar.projectKey=MarcoMeyer1_apds-part-2 \
               -Dsonar.organization=marcomeyer1 \
               -Dsonar.sources=client,employee \
               -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.login=$SONAR_TOKEN \
+              -Dsonar.token=$SONAR_TOKEN \
               -X
 
 workflows:
