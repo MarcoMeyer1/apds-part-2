@@ -478,6 +478,7 @@ app.post('/employee-login', async (req, res) => {
 
 
 
+
 app.get('/api/employee/profile', async (req, res) => {
     const token = req.cookies['JWT-SESSION'];
 
