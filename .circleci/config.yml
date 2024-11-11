@@ -8,33 +8,38 @@ jobs:
     steps:
       - checkout  # Checkout your code from the repo
 
-      # Cache node_modules to speed up subsequent buildz
+      # Cache node_modules to speed up subsequent builds
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "client/package.json" }}
             - v1-dependencies-
 
-      # Install dependencies
+      # Install dependencies for client and employee projects
       - run:
           name: Install Dependencies
           command: |
             cd client
+            npm install
+            cd ../employee
             npm install
 
       # Save node_modules cache
       - save_cache:
           paths:
             - client/node_modules
+            - employee/node_modules
           key: v1-dependencies-{{ checksum "client/package.json" }}
 
-      # Install SonarScanner locally
+      # Install SonarScanner locally in each project directory if necessary
       - run:
           name: Install SonarScanner Locally
           command: |
             cd client
             npm install sonarqube-scanner
+            cd ../employee
+            npm install sonarqube-scanner
 
-      # Run SonarQube Scan using SonarCloud with updated syntax
+      # Run SonarQube Scan including both client and employee directories
       - run:
           name: Run SonarCloud Scan
           command: |
@@ -42,7 +47,7 @@ jobs:
             npx sonar-scanner \
               -Dsonar.projectKey=MarcoMeyer1_apds-part-2 \
               -Dsonar.organization=marcomeyer1 \
-              -Dsonar.sources=. \
+              -Dsonar.sources=../client,../employee \
               -Dsonar.host.url=https://sonarcloud.io \
               -Dsonar.token=$SONAR_TOKEN \
               -X
