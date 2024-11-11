@@ -1,4 +1,4 @@
-// Client Portal - App.test.js
+import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import App from './App';
 
@@ -14,8 +14,8 @@ describe('Client Portal - Login Component', () => {
     const usernameInput = screen.getByLabelText(/Username/i);
     expect(usernameInput).toBeInTheDocument();
 
-    // Check for account number input
-    const accountNumberInput = screen.getByLabelText(/Employee Number/i);
+    // Check for account number input (updated label text)
+    const accountNumberInput = screen.getByLabelText(/Account Number/i);
     expect(accountNumberInput).toBeInTheDocument();
 
     // Check for password input
@@ -28,8 +28,6 @@ describe('Client Portal - Login Component', () => {
   });
 
   test('displays error message on failed login', async () => {
-    render(<App />);
-
     // Mock fetch to simulate a failed login response
     global.fetch = jest.fn(() =>
       Promise.resolve({
@@ -38,11 +36,13 @@ describe('Client Portal - Login Component', () => {
       })
     );
 
+    render(<App />);
+
     // Fill in the form
     fireEvent.change(screen.getByLabelText(/Username/i), {
       target: { value: 'testuser' },
     });
-    fireEvent.change(screen.getByLabelText(/Employee Number/i), {
+    fireEvent.change(screen.getByLabelText(/Account Number/i), { // Updated label
       target: { value: '12345' },
     });
     fireEvent.change(screen.getByLabelText(/Password/i), {
@@ -72,7 +72,7 @@ describe('Client Portal - Login Component', () => {
     fireEvent.change(screen.getByLabelText(/Username/i), {
       target: { value: 'testuser' },
     });
-    fireEvent.change(screen.getByLabelText(/Employee Number/i), {
+    fireEvent.change(screen.getByLabelText(/Account Number/i), { // Updated label
       target: { value: '12345' },
     });
     fireEvent.change(screen.getByLabelText(/Password/i), {
