@@ -49,9 +49,37 @@ const Login = () => {
         setErrorMessage(''); 
     };
 
+    const handleButtonClick = (e) => {
+        const button = e.currentTarget;
+
+        const existingRipple = button.querySelector(".ripple");
+
+        if (existingRipple) {
+            existingRipple.remove();
+        }
+
+        const ripple = document.createElement("span");
+        ripple.classList.add("ripple");
+
+        const rect = button.getBoundingClientRect();
+        const rippleSize= Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - rippleSize /2;
+        const y = e.clientY - rect.top - rippleSize /2;
+
+        ripple.style.width = ripple.style.height =  `${rippleSize}px`;
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+
+        button.appendChild(ripple);
+
+        ripple.addEventListener("animationend", () => {
+            ripple.remove();
+        })
+    }
+
     return (
         <div className="login-page">
-            {/* Blue Gradient Background */}
+            {/* Gradient Background */}
             <div className="gradient-background"></div>
 
             {/* Login Form */}
@@ -96,7 +124,11 @@ const Login = () => {
                         />
                     </div>
 
-                    <button type="submit" disabled={!captchaVerified}>Login</button>
+                    <button type="submit" disabled={!captchaVerified} onClick={handleButtonClick}>
+                       <span classname="ripple"></span>
+                       <span>Login</span>
+                    </button>
+
                 </form>
             </div>
         </div>
