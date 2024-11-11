@@ -85,23 +85,35 @@ const EmployeeDashboard = () => {
             <div className="spacer"></div>
 
             {/* Profile Card */}
-            <div className="profile-card">
-                <div className="profile-picture-container" onClick={triggerFileInput}>
-                    <div className="profile-picture">
-                        {profileImage ? (
-                            <img src={profileImage} alt="Profile" />
-                        ) : (
-                            <img src="/default-profile.png" alt="Default Profile" />
-                        )}
-                    </div>
-                    <input
-                        id="file-upload"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden-file-input"
-                    />
-                </div>
+<div className="profile-card">
+  <div
+    className="profile-picture-container"
+    onClick={triggerFileInput}
+    role="button"
+    tabIndex="0"
+    onKeyDown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        triggerFileInput();
+      }
+    }}
+  >
+    <div className="profile-picture">
+      {profileImage ? (
+        <img src={profileImage} alt="Profile" />
+      ) : (
+        <img src="/default-profile.png" alt="Default Profile" />
+      )}
+    </div>
+  </div>
+  <input
+    id="file-upload"
+    type="file"
+    accept="image/*"
+    onChange={handleImageUpload}
+    className="hidden-file-input"
+  />
+</div>
+
 
                 {/* Profile Information */}
                 <div className="profile-info">
