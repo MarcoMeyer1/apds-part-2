@@ -1,39 +1,36 @@
 // Client Portal - App.test.js
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import App from './App';
 
 describe('Client Portal - Login Component', () => {
   test('renders login form', () => {
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    );
+    render(<App />);
 
+    // Check for the "Login" heading
     const headingElement = screen.getByRole('heading', { name: /login/i });
     expect(headingElement).toBeInTheDocument();
 
+    // Check for username input
     const usernameInput = screen.getByLabelText(/Username/i);
     expect(usernameInput).toBeInTheDocument();
 
+    // Check for account number input
     const accountNumberInput = screen.getByLabelText(/Employee Number/i);
     expect(accountNumberInput).toBeInTheDocument();
 
+    // Check for password input
     const passwordInput = screen.getByLabelText(/Password/i);
     expect(passwordInput).toBeInTheDocument();
 
+    // Check for the login button
     const loginButton = screen.getByRole('button', { name: /Login/i });
     expect(loginButton).toBeInTheDocument();
   });
 
   test('displays error message on failed login', async () => {
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    );
+    render(<App />);
 
+    // Mock fetch to simulate a failed login response
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: false,
@@ -41,6 +38,7 @@ describe('Client Portal - Login Component', () => {
       })
     );
 
+    // Fill in the form
     fireEvent.change(screen.getByLabelText(/Username/i), {
       target: { value: 'testuser' },
     });
@@ -51,13 +49,16 @@ describe('Client Portal - Login Component', () => {
       target: { value: 'password' },
     });
 
+    // Submit the form
     fireEvent.click(screen.getByRole('button', { name: /Login/i }));
 
+    // Wait for error message to display
     const errorMessage = await screen.findByText(/Login Failed/i);
     expect(errorMessage).toBeInTheDocument();
   });
 
   test('redirects to home after successful login', async () => {
+    // Mock fetch to simulate a successful login response
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
@@ -65,12 +66,9 @@ describe('Client Portal - Login Component', () => {
       })
     );
 
-    render(
-      <MemoryRouter initialEntries={['/login']}>
-        <App />
-      </MemoryRouter>
-    );
+    render(<App />);
 
+    // Fill in the form
     fireEvent.change(screen.getByLabelText(/Username/i), {
       target: { value: 'testuser' },
     });
@@ -81,8 +79,10 @@ describe('Client Portal - Login Component', () => {
       target: { value: 'password' },
     });
 
+    // Submit the form
     fireEvent.click(screen.getByRole('button', { name: /Login/i }));
 
+    // Check that the homepage content is displayed after login
     const homePageContent = await screen.findByText(/Welcome to the Homepage!/i);
     expect(homePageContent).toBeInTheDocument();
   });
