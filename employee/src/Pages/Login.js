@@ -123,7 +123,7 @@ const Login = () => {
 
                     <div className="form-group">
                         <ReCAPTCHA
-                            sitekey="your-site-key"
+                            sitekey="6LfxHHoqAAAAAF8x9aq_SRF1R2DZi7qfztobKRXc"
                             onChange={handleCaptchaChange}
                         />
                     </div>
