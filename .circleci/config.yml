@@ -60,7 +60,6 @@ jobs:
             sonar-scanner \
               -Dsonar.projectKey=MarcoMeyer1_apds-part-2 \
               -Dsonar.organization=marcomeyer1 \
-              -Dsonar.sources=client,employee \
               -Dsonar.host.url=https://sonarcloud.io \
               -Dsonar.token=$SONAR_TOKEN \
               -X
