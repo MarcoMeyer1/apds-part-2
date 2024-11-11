@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './EmployeeDashboard.css';
 
 const EmployeeDashboard = () => {
     const navigate = useNavigate();
     const [profileImage, setProfileImage] = useState(null);
+    const [username, setUsername] = useState('');
 
     const handleVerifyTransactions = () => {
         navigate('/verify-transactions');
@@ -29,17 +30,29 @@ const EmployeeDashboard = () => {
         document.getElementById('file-upload').click();
     };
 
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return "Good Morning";
+        else if (hour < 18) return "Good Afternoon";
+        else return "Good Evening";
+    };
+
+    useEffect(() => {
+        const storedUsername = localStorage.getItem('username');
+        if (storedUsername) {
+            setUsername(storedUsername);
+        }
+    }, []);
+
     return (
         <div className="dashboard-container">
-    {/* Top gradient banner */}
+    {/*gradient banner */}
     <div className="profile-banner"></div>
 
-    {/* Spacer to move the profile section down */}
     <div className="spacer"></div>
 
     {/* Profile Card */}
     <div className="profile-card">
-        {/* Profile picture overlapping the banner and the card */}
         <div className="profile-picture-container" onClick={triggerFileInput}>
             <div className="profile-picture">
                 {profileImage ? (
@@ -59,7 +72,7 @@ const EmployeeDashboard = () => {
 
         {/* Profile Information */}
         <div className="profile-info">
-            <h2>Welcome back John Doe</h2>
+        <h2>{`${getGreeting()}, John Doe`}</h2>
             <p>johndoe@example.com</p>
             
             <div className="profile-details">
@@ -74,9 +87,6 @@ const EmployeeDashboard = () => {
         <div className="button-container">
             <button onClick={handleVerifyTransactions} className="action-button">
                 Verify Transactions
-            </button>
-            <button onClick={handleManageTransactions} className="action-button">
-                Manage Transactions
             </button>
         </div>
     </div>

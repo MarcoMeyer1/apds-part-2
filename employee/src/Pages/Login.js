@@ -33,6 +33,7 @@ const Login = () => {
                 const data = await response.json();
                 alert('Login Successful');
                 if (data.role === 'Employee') {
+                    localStorage.setItem('username', data.username); 
                     window.location.href = '/employee-dashboard';
                 }
             } else {
