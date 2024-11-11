@@ -5,7 +5,6 @@ import './EmployeeDashboard.css';
 const EmployeeDashboard = () => {
     const navigate = useNavigate();
     const [profileImage, setProfileImage] = useState(null);
-    const [username, setUsername] = useState('');
 
     const handleVerifyTransactions = () => {
         navigate('/verify-transactions');
@@ -37,13 +36,6 @@ const EmployeeDashboard = () => {
         else return "Good Evening";
     };
 
-    useEffect(() => {
-        const storedUsername = localStorage.getItem('username');
-        if (storedUsername) {
-            setUsername(storedUsername);
-        }
-    }, []);
-
     return (
         <div className="dashboard-container">
     {/*gradient banner */}
@@ -55,11 +47,11 @@ const EmployeeDashboard = () => {
     <div className="profile-card">
         <div className="profile-picture-container" onClick={triggerFileInput}>
             <div className="profile-picture">
-                {profileImage ? (
-                    <img src={profileImage} alt="Profile" />
-                ) : (
-                    <span>Profile Pic</span>
-                )}
+            {profileImage ? (
+                            <img src={profileImage} alt="Profile" />
+                        ) : (
+                            <img src="/default-profile.png" alt="Default Profile" />
+                        )}
             </div>
             <input
                 id="file-upload"
