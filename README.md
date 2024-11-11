@@ -83,6 +83,9 @@ To run the project locally, follow these steps:
 
 The client will run on `https://localhost:3000` and the API will run on `https://localhost:5000`.
 
+### Important: 
+Please avoid running the site in edge as it will not give you the option to proceed to the site due to the SSL certificate being self-signed. Chrome is recommended as it will allow you to proceed.
+
 ---
 
 ## CircleCI Configuration
