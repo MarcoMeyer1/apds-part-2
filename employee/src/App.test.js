@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import Login from './Login';
+import Login from './Pages/Login';
 
 test('renders login page', () => {
   render(
